@@ -141,7 +141,7 @@ async function connectWallet(){try{let ep=null;if(window.ethereum){ep=window.eth
 async function loadStats(){try{const rp=new ethers.JsonRpcProvider('https://arc-testnet.drpc.org');const reg=new ethers.Contract(REGISTRY_ADDRESS,REGISTRY_ABI,rp);const total=await reg.getCreatorCount();document.getElementById('totalCreators').textContent=total.toString();if(signer){const addr=await signer.getAddress();const creator=await reg.getCreator(addr);document.getElementById('myEarnings').textContent=ethers.formatUnits(creator.totalEarned,6)+' USDC';}}catch(e){console.log('Stats error:',e.message);document.getElementById('totalCreators').textContent='ERR:'+e.message.substring(0,20);}}
   }catch(e){ console.log('Stats error:',e.message); }
 }
-window.addEventListener("load",async()=>{alert("JS loaded");document.getElementById("connectBtn").addEventListener("click",connectWallet);try{await loadStats();}catch(e){console.log("load error:",e.message);}});
+window.addEventListener("load",async()=>{var cb=document.getElementById("connectBtn");cb.addEventListener("touchend",function(e){e.preventDefault();connectWallet();});alert("JS loaded");document.getElementById("connectBtn").addEventListener("click",connectWallet);try{await loadStats();}catch(e){console.log("load error:",e.message);}});
 </script>
 </body>
 </html>
