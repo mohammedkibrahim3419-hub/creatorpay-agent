@@ -70,7 +70,7 @@ input::placeholder{color:var(--muted);}
 <div class="logo"><div class="logo-icon">⚡</div><div class="logo-text">Creator<span>Pay</span></div></div>
 <div class="wallet-info">
 <div class="network-badge"><div class="dot"></div>Arc Testnet</div>
-<button class="connect-btn" id="connectBtn" onclick="connectWallet()" style="position:relative;z-index:9999;pointer-events:auto;">Connect Wallet</button>
+<a href="#" id="connectBtn" onclick="event.preventDefault();connectWallet();" style="display:inline-block;padding:10px 20px;background:#00ff88;color:#000;font-weight:bold;border-radius:8px;text-decoration:none;cursor:pointer;z-index:9999;position:relative;">Connect Wallet</a>
 </div>
 </header>
 <div class="stats">
