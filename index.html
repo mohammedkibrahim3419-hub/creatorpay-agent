@@ -143,5 +143,5 @@ async function loadStats(){try{const rp=new ethers.JsonRpcProvider('https://arc-
 }
 window.addEventListener("load",async()=>{var cb=document.getElementById("connectBtn");cb.addEventListener("touchend",function(e){e.preventDefault();connectWallet();});document.getElementById("connectBtn").addEventListener("click",connectWallet);try{await loadStats();}catch(e){console.log("load error:",e.message);}});
 </script>
-</body>
+<div id="jserr" style="color:red;padding:10px;font-size:12px;"></div><script>window.onerror=function(m,s,l,c,e){document.getElementById("jserr").textContent="JS ERR: "+m;};</script></body>
 </html>
