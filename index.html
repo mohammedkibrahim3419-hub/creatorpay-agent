@@ -143,5 +143,104 @@ async function loadStats(){try{const rp=new ethers.JsonRpcProvider('https://arc-
 }
 window.addEventListener("load",async()=>{var cb=document.getElementById("connectBtn");cb.addEventListener("touchend",function(e){e.preventDefault();connectWallet();});document.getElementById("connectBtn").addEventListener("click",connectWallet);try{await loadStats();}catch(e){console.log("load error:",e.message);}});
 </script>
-<div id="jserr" style="color:red;padding:10px;font-size:12px;"></div><script>window.onerror=function(m,s,l,c,e){document.getElementById("jserr").textContent="JS ERR: "+m;};</script></body>
-</html>
+<div id="jserr" style="color:red;padding:10px;font-size:12px;"></div><script>
+const RPC_URL='https://arc-testnet.drpc.org';
+const REGISTRY_ADDRESS='0x0727cE415814C23E74B59D754C4020dB2E28651c';
+const TRIGGER_ADDRESS='0xD4992Fbff51f3E75432569D7F1a808BD02bf0f04';
+const REGISTRY_ABI=["function register(string calldata contentId) external","function isRegistered(address wallet) external view returns (bool)","function getCreator(address wallet) external view returns (tuple(address wallet,string contentId,bool isRegistered,uint256 totalEarned))","function getCreatorCount() external view returns (uint256)"];
+const TRIGGER_ABI=["function triggerPayout(address creator,uint256 engagements) external"];
+let provider,signer,userAddress;
+
+function log(msg,type='info'){const el=document.getElementById('activityLog');const d=document.createElement('div');d.style.color=type==='error'?'#ff4466':type==='success'?'#00ff88':'#aaa';d.textContent='> '+msg;el.appendChild(d);}
+function setStatus(id,msg,type){const el=document.getElementById(id);if(el){el.textContent=msg;el.className='status '+type;}}
+function showPanel(id){document.querySelectorAll('.panel').forEach(p=>p.style.display='none');document.getElementById('panel-'+id).style.display='block';}
+
+async function connectWallet(){
+  if(!window.ethereum){alert('Open in MetaMask browser');return;}
+  try{
+    const accs=await window.ethereum.request({method:'eth_requestAccounts'});
+    provider=new ethers.BrowserProvider(window.ethereum);
+    signer=await provider.getSigner();
+    userAddress=accs[0];
+    const btn=document.getElementById('connectBtn');
+    btn.textContent=userAddress.slice(0,6)+'...'+userAddress.slice(-4);
+    btn.style.background='#00cc66';
+    log('Wallet connected: '+userAddress,'success');
+    await loadStats();
+  }catch(e){alert('Error: '+e.message);}
+}
+
+async function loadStats(){
+  try{
+    const rp=new ethers.JsonRpcProvider(RPC_URL);
+    const reg=new ethers.Contract(REGISTRY_ADDRESS,REGISTRY_ABI,rp);
+    const total=await reg.getCreatorCount();
+    document.getElementById('totalCreators').textContent=total.toString();
+    if(signer){
+      const creator=await reg.getCreator(userAddress);
+      document.getElementById('myEarnings').textContent=ethers.formatUnits(creator.totalEarned,6)+' USDC';
+    }
+  }catch(e){console.log('Stats error:',e.message);}
+}
+
+async function registerCreator(){
+  if(!signer){alert('Connect wallet first');return;}
+  const cid=document.getElementById('contentId').value.trim();
+  if(!cid){setStatus('registerStatus','Content ID required','error');return;}
+  setStatus('registerStatus','Registering...','loading');
+  try{
+    const reg=new ethers.Contract(REGISTRY_ADDRESS,REGISTRY_ABI,signer);
+    const tx=await reg.register(cid);
+    await tx.wait();
+    setStatus('registerStatus','Registered!','success');
+    log('Creator registered: '+cid,'success');
+    await loadStats();
+  }catch(e){setStatus('registerStatus','Error: '+e.message,'error');}
+}
+
+async function loadProfile(){
+  if(!signer){alert('Connect wallet first');return;}
+  try{
+    const rp=new ethers.JsonRpcProvider(RPC_URL);
+    const reg=new ethers.Contract(REGISTRY_ADDRESS,REGISTRY_ABI,rp);
+    const c=await reg.getCreator(userAddress);
+    document.getElementById('profileData').innerHTML='<p>Handle: '+c.contentId+'</p><p>Earned: '+ethers.formatUnits(c.totalEarned,6)+' USDC</p>';
+  }catch(e){document.getElementById('profileData').textContent='Error: '+e.message;}
+}
+
+async function fundPool(){
+  if(!signer){alert('Connect wallet first');return;}
+  const amt=document.getElementById('fundAmount').value;
+  if(!amt){setStatus('fundStatus','Amount required','error');return;}
+  setStatus('fundStatus','Funding...','loading');
+  try{
+    const trig=new ethers.Contract(TRIGGER_ADDRESS,TRIGGER_ABI,signer);
+    const tx=await trig.fundPool(ethers.parseUnits(amt,6));
+    await tx.wait();
+    setStatus('fundStatus','Funded '+amt+' USDC','success');
+    await loadStats();
+  }catch(e){setStatus('fundStatus','Error: '+e.message,'error');}
+}
+
+async function triggerPayout(){
+  if(!signer){alert('Connect wallet first');return;}
+  const cr=document.getElementById('payoutCreator').value.trim();
+  const eng=document.getElementById('payoutEngagements').value;
+  if(!cr||!eng){setStatus('payoutStatus','Fill all fields','error');return;}
+  setStatus('payoutStatus','Triggering...','loading');
+  try{
+    const trig=new ethers.Contract(TRIGGER_ADDRESS,TRIGGER_ABI,signer);
+    const tx=await trig.triggerPayout(cr,eng);
+    await tx.wait();
+    setStatus('payoutStatus','Payout confirmed!','success');
+    log('Payout confirmed for '+cr,'success');
+    await loadStats();
+  }catch(e){setStatus('payoutStatus','Error: '+e.message,'error');}
+}
+
+window.addEventListener('load',async()=>{
+  document.getElementById('connectBtn').onclick=connectWallet;
+  showPanel('creator');
+  try{await loadStats();}catch(e){}
+});
+</script></body>
