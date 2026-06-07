@@ -69,7 +69,7 @@ body{background:#0a0a0a;color:#fff;font-family:monospace;padding:20px;max-width:
   };
   window._initAppKit();
 </script>
-</head>
+<script src="/appkit.js"></script></head>
 <body>
 <div class="header">
   <div class="logo">Creator<span>Pay</span></div>
@@ -157,7 +157,18 @@ function switchTab(tab){
   document.getElementById('panel-'+tab).style.display='block';
 }
 
-document.getElementById('connectBtn').onclick=function(){if(window._modal){window._modal.open();return;}
+window.addEventListener('walletConnected', function(e){
+  const address = e.detail.address;
+  window._wcAddress = address;
+  provider = new ethers.BrowserProvider(window.ethereum || window.AppKit?.provider);
+  provider.getSigner().then(s => { signer = s; userAddress = address; loadStats(); });
+  const btn = document.getElementById('connectBtn');
+  btn.textContent = address.slice(0,6)+'...'+address.slice(-4);
+  btn.style.background = '#00ff88';
+  btn.style.color = '#000';
+});
+document.getElementById('connectBtn').onclick=function(){
+if(window.appKitModal){ window.appKitModal.open(); return; }if(window._modal){window._modal.open();return;}
   if(!window.ethereum){alert('Open in MetaMask browser');return;}
   window.ethereum.request({method:'eth_requestAccounts'}).then(function(accs){
     provider=new ethers.BrowserProvider(window.ethereum);
