@@ -29,7 +29,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .tabs{display:flex;gap:4px;margin-bottom:24px;background:var(--surface);padding:4px;border-radius:10px;border:1px solid var(--border);}
 .tab{flex:1;padding:10px;text-align:center;border-radius:7px;cursor:pointer;font-size:13px;font-weight:700;color:var(--muted);transition:all 0.2s;border:none;background:transparent;font-family:'Syne',sans-serif;}
 .tab.active{background:var(--card);color:var(--accent);border:1px solid var(--border);}
-.panel{display:none;}
+.panel{display:none;}.panel.active{display:block;}#t1:checked~* #panel-creator,#t2:checked~* #panel-admin,#t3:checked~* #panel-activity{display:block !important;}
 .panel.active{display:block;}
 .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px;}
 .card-title{font-size:14px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:20px;display:flex;align-items:center;gap:8px;}
@@ -79,9 +79,12 @@ input::placeholder{color:var(--muted);}
 <div class="stat-card"><div class="stat-label">Your Earnings</div><div class="stat-value" id="myEarnings">—</div></div>
 </div>
 <p style="text-align:center;color:#aaa;font-size:14px;margin:8px 0 16px;">Automated USDC payroll for creators — powered by Arc.</p><div class="tabs">
-<a class="tab active" href="#" onclick="event.preventDefault();switchTab('creator')">🎨 Creator</a>
-<a class="tab" href="#" onclick="event.preventDefault();switchTab('admin')">⚙️ Admin</a>
-<a class="tab" href="#" onclick="event.preventDefault();switchTab('activity')">📋 Activity</a>
+<input type="radio" name="tab" id="t1" checked style="display:none">
+<input type="radio" name="tab" id="t2" style="display:none">
+<input type="radio" name="tab" id="t3" style="display:none">
+<label for="t1" class="tab">🎨 Creator</label>
+<label for="t2" class="tab">⚙️ Admin</label>
+<label for="t3" class="tab">📋 Activity</label>
 </div>
 <div class="panel active" id="panel-creator">
 <div class="card">
