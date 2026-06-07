@@ -190,7 +190,7 @@ async function loadStats(){
     const reg=new ethers.Contract(REGISTRY_ADDRESS,REGISTRY_ABI,rp);
     const trig=new ethers.Contract(TRIGGER_ADDRESS,TRIGGER_ABI,rp);
     const pool=await trig.getPoolBalance();
-    document.getElementById('poolBalance').textContent=ethers.formatUnits(pool,6)+' USDC';
+    const pn=parseFloat(ethers.formatUnits(pool,6));let pd;if(pn>=1e9)pd=(pn/1e9).toFixed(1)+'B';else if(pn>=1e6)pd=(pn/1e6).toFixed(1)+'M';else if(pn>=1e3)pd=(pn/1e3).toFixed(1)+'K';else pd=pn.toFixed(2);document.getElementById('poolBalance').textContent=pd+' USDC';
     const total=await reg.getCreatorCount();
     document.getElementById('totalCreators').textContent=total.toString();
     if(signer){
