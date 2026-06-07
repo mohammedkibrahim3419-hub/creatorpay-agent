@@ -167,7 +167,7 @@ async function registerCreator(){
     const reg=new ethers.Contract(REGISTRY_ADDRESS,REGISTRY_ABI,signer);
     const tx=await reg.register(cid);
     await tx.wait();
-    setStatus('registerStatus','Registered!','success');
+    setStatus('registerStatus','Registered! <a href="https://testnet.arcscan.app/tx/'+tx.hash+'" target="_blank" style="color:#00ff88">View on ArcScan ↗</a>','success');
     log('Creator registered: '+cid,'success');
     await loadStats();
   }catch(e){setStatus('registerStatus','Error: '+e.message,'error');}
@@ -192,7 +192,7 @@ async function fundPool(){
     const trig=new ethers.Contract(TRIGGER_ADDRESS,TRIGGER_ABI,signer);
     const tx=await trig.fundPool(ethers.parseUnits(amt,6));
     await tx.wait();
-    setStatus('fundStatus','Funded '+amt+' USDC','success');
+    setStatus('fundStatus','Funded '+amt+' USDC! <a href="https://testnet.arcscan.app/tx/'+tx.hash+'" target="_blank" style="color:#00ff88">View on ArcScan ↗</a>','success');
     log('Pool funded: '+amt+' USDC','success');
     await loadStats();
   }catch(e){setStatus('fundStatus','Error: '+e.message,'error');}
@@ -208,7 +208,7 @@ async function triggerPayout(){
     const trig=new ethers.Contract(TRIGGER_ADDRESS,TRIGGER_ABI,signer);
     const tx=await trig.triggerPayout(cr,eng);
     await tx.wait();
-    setStatus('payoutStatus','Payout confirmed!','success');
+    setStatus('payoutStatus','Payout confirmed! <a href="https://testnet.arcscan.app/tx/'+tx.hash+'" target="_blank" style="color:#00ff88">View on ArcScan ↗</a>','success');
     log('Payout confirmed for '+cr,'success');
     await loadStats();
   }catch(e){setStatus('payoutStatus','Error: '+e.message,'error');}
