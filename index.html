@@ -97,7 +97,7 @@ body{background:#0a0a0a;color:#fff;font-family:monospace;padding:20px;max-width:
 const REGISTRY_ADDRESS='0x0727cE415814C23E74B59D754C4020dB2E28651c';
 const TRIGGER_ADDRESS='0xD4992Fbff51f3E75432569D7F1a808BD02bf0f04';
 const REGISTRY_ABI=["function register(string calldata contentId) external","function isRegistered(address wallet) external view returns (bool)","function getCreator(address wallet) external view returns (tuple(address wallet,string contentId,bool isRegistered,uint256 totalEarned))","function getCreatorCount() external view returns (uint256)"];
-const TRIGGER_ABI=["function triggerPayout(address creator,uint256 engagements) external","function getPoolBalance() external view returns (uint256)"];
+const TRIGGER_ABI=["function triggerPayout(address creator,uint256 engagements) external","function getPoolBalance() external view returns (uint256)","function fundPool(uint256 amount) external"];
 let provider,signer,userAddress;
 
 function log(msg,type='info'){
