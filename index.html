@@ -1,190 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CreatorPay Agent</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
 <style>
-:root{--bg:#0a0a0f;--surface:#111118;--border:#1e1e2e;--accent:#00ff88;--text:#e8e8f0;--muted:#5a5a7a;--error:#ff4466;--card:#13131e;}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,136,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
-.glow{position:fixed;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(0,255,136,0.06) 0%,transparent 70%);top:-200px;right:-200px;pointer-events:none;z-index:0;}
-.container{max-width:900px;margin:0 auto;padding:24px 16px;position:relative;z-index:1;}
-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;padding-bottom:20px;border-bottom:1px solid var(--border);}
-.logo{display:flex;align-items:center;gap:12px;}
-.logo-icon{width:36px;height:36px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;}
-.logo-text{font-size:20px;font-weight:800;}
-.logo-text span{color:var(--accent);}
-.connect-btn{background:transparent;border:1px solid var(--accent);color:var(--accent);padding:8px 20px;border-radius:6px;font-family:'Space Mono',monospace;font-size:12px;cursor:pointer;transition:all 0.2s;}
-.connect-btn:hover{background:var(--accent);color:var(--bg);}
-.connect-btn.connected{background:rgba(0,255,136,0.1);}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px;}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;position:relative;overflow:hidden;}
-.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);opacity:0.5;}
-.stat-label{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
-.stat-value{font-size:22px;font-weight:800;color:var(--accent);}
-.tabs{display:flex;gap:4px;margin-bottom:24px;background:var(--surface);padding:4px;border-radius:10px;border:1px solid var(--border);}
-.tab{flex:1;padding:10px;text-align:center;border-radius:7px;cursor:pointer;font-size:13px;font-weight:700;color:var(--muted);transition:all 0.2s;border:none;background:transparent;font-family:'Syne',sans-serif;}
-.tab.active{background:var(--card);color:var(--accent);border:1px solid var(--border);}
-.panel{display:none;}.panel.active{display:block;}
-
-
-
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0a0a0a;color:#fff;font-family:monospace;padding:20px;max-width:480px;margin:0 auto;}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
+.logo{font-size:22px;font-weight:900;}
+.logo span{color:#00ff88;}
+.btn{background:#00ff88;color:#000;border:none;padding:12px 20px;border-radius:8px;font-weight:700;font-size:14px;width:100%;margin-top:8px;cursor:pointer;}
+.btn-outline{background:transparent;color:#00ff88;border:2px solid #00ff88;padding:10px 20px;border-radius:8px;font-weight:700;font-size:14px;width:100%;margin-top:8px;cursor:pointer;}
+.connect-btn{background:transparent;color:#00ff88;border:2px solid #00ff88;padding:8px 16px;border-radius:8px;font-weight:700;cursor:pointer;}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px;}
+.stat-card{background:#111;border:1px solid #222;border-radius:10px;padding:14px;text-align:center;}
+.stat-label{font-size:10px;color:#666;margin-bottom:6px;text-transform:uppercase;}
+.stat-value{font-size:18px;font-weight:900;color:#00ff88;}
+.tagline{text-align:center;color:#aaa;font-size:13px;margin-bottom:16px;}
+.tabs{display:flex;gap:8px;margin-bottom:16px;}
+.tab{flex:1;padding:10px;text-align:center;background:#111;border:1px solid #222;border-radius:8px;cursor:pointer;font-size:13px;color:#aaa;user-select:none;}
+.tab.active{background:#00ff88;color:#000;font-weight:700;border-color:#00ff88;}
+.panel{display:none;}
 .panel.active{display:block;}
-.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px;}
-.card-title{font-size:14px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:20px;display:flex;align-items:center;gap:8px;}
-.card-title::before{content:'';width:3px;height:14px;background:var(--accent);border-radius:2px;display:inline-block;}
-.field{margin-bottom:16px;}
-label{display:block;font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:6px;}
-input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px;color:var(--text);font-family:'Space Mono',monospace;font-size:13px;outline:none;transition:border-color 0.2s;}
-input:focus{border-color:var(--accent);}
-input::placeholder{color:var(--muted);}
-.btn{width:100%;padding:14px;border-radius:8px;border:none;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;}
-.btn-primary{background:var(--accent);color:var(--bg);}
-.btn-primary:hover{opacity:0.9;transform:translateY(-1px);}
-.btn-outline{background:transparent;border:1px solid var(--accent);color:var(--accent);}
-.btn-outline:hover{background:rgba(0,255,136,0.1);}
-.status{padding:12px 16px;border-radius:8px;font-family:'Space Mono',monospace;font-size:12px;margin-top:12px;display:none;}
-.status.success{background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.3);color:var(--accent);display:block;}
-.status.error{background:rgba(255,68,102,0.1);border:1px solid rgba(255,68,102,0.3);color:var(--error);display:block;}
-.status.loading{background:rgba(123,94,167,0.1);border:1px solid rgba(123,94,167,0.3);color:#b39ddb;display:block;}
-.log{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;height:180px;overflow-y:auto;font-family:'Space Mono',monospace;font-size:11px;line-height:1.8;}
-.log-entry{color:var(--muted);}
-.log-entry.success{color:var(--accent);}
-.log-entry.error{color:var(--error);}
-.log-entry.info{color:#b39ddb;}
-.address{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);background:var(--surface);padding:8px 12px;border-radius:6px;border:1px solid var(--border);word-break:break-all;margin-top:8px;}
-.creator-item{display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;font-family:'Space Mono',monospace;font-size:11px;}
-.creator-badge{background:rgba(0,255,136,0.1);color:var(--accent);padding:3px 8px;border-radius:4px;font-size:10px;}
-.network-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);padding:4px 10px;border-radius:20px;font-family:'Space Mono',monospace;font-size:10px;color:var(--accent);}
-.dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite;}
-.wallet-info{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
-@media(max-width:600px){.stats{grid-template-columns:1fr;}header{flex-direction:column;gap:12px;}}
+.card{background:#111;border:1px solid #222;border-radius:12px;padding:16px;margin-bottom:12px;}
+.card-title{font-size:12px;font-weight:700;color:#00ff88;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;}
+.field{margin-bottom:10px;}
+.field label{font-size:11px;color:#666;display:block;margin-bottom:4px;text-transform:uppercase;}
+.field input{width:100%;background:#0a0a0a;border:1px solid #333;border-radius:6px;padding:10px;color:#fff;font-size:14px;font-family:monospace;}
+.status{display:none;padding:8px;border-radius:6px;font-size:12px;margin-top:8px;}
+.status.success{display:block;background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.3);color:#00ff88;}
+.status.error{display:block;background:rgba(255,68,102,0.1);border:1px solid rgba(255,68,102,0.3);color:#ff4466;}
+.status.loading{display:block;background:rgba(123,94,167,0.1);border:1px solid rgba(123,94,167,0.3);color:#b39ddb;}
+.log{background:#0a0a0a;border:1px solid #222;border-radius:8px;padding:12px;height:200px;overflow-y:auto;font-size:12px;}
+.log-entry{padding:2px 0;color:#aaa;}
+.log-entry.success{color:#00ff88;}
+.log-entry.error{color:#ff4466;}
 </style>
 </head>
 <body>
-<div class="glow"></div>
-<div class="container">
-<header>
-<div class="logo"><div class="logo-icon">⚡</div><div class="logo-text">Creator<span>Pay</span></div></div>
-<div class="wallet-info">
-<div class="network-badge"><div class="dot"></div>Arc Testnet</div>
-<a href="#" id="connectBtn" onclick="event.preventDefault();connectWallet();" style="display:inline-block;padding:10px 20px;background:#00ff88;color:#000;font-weight:bold;border-radius:8px;text-decoration:none;cursor:pointer;z-index:9999;position:relative;">Connect Wallet</a>
+<div class="header">
+  <div class="logo">Creator<span>Pay</span></div>
+  <button class="connect-btn" id="connectBtn">Connect Wallet</button>
 </div>
-</header>
-<div class="stats">
-<div class="stat-card"><div class="stat-label">Pool Balance</div><div class="stat-value" id="poolBalance">—</div></div>
-<div class="stat-card"><div class="stat-label">Total Creators</div><div class="stat-value" id="totalCreators">—</div></div>
-<div class="stat-card"><div class="stat-label">Your Earnings</div><div class="stat-value" id="myEarnings">—</div></div>
+<div class="stat-grid">
+  <div class="stat-card"><div class="stat-label">Pool Balance</div><div class="stat-value" id="poolBalance">—</div></div>
+  <div class="stat-card"><div class="stat-label">Total Creators</div><div class="stat-value" id="totalCreators">—</div></div>
+  <div class="stat-card"><div class="stat-label">Your Earnings</div><div class="stat-value" id="myEarnings">—</div></div>
 </div>
-<p style="text-align:center;color:#aaa;font-size:14px;margin:8px 0 16px;">Automated USDC payroll for creators — powered by Arc.</p><div class="tabs">
-<label class="tab" onclick="switchTab('creator')"style="cursor:pointer;display:inline-block;">🎨 Creator</label>
-<label class="tab" onclick="switchTab('admin')" style="cursor:pointer;display:inline-block;">⚙️ Admin</label>
-<label class="tab" onclick="switchTab('activity')" style="cursor:pointer;display:inline-block;">📋 Activity</label>
+<p class="tagline">Automated USDC payroll for creators — powered by Arc.</p>
+<div class="tabs">
+  <div class="tab active" id="tab-creator" onclick="switchTab('creator')">🎨 Creator</div>
+  <div class="tab" id="tab-admin" onclick="switchTab('admin')">⚙️ Admin</div>
+  <div class="tab" id="tab-activity" onclick="switchTab('activity')">📋 Activity</div>
 </div>
 <div class="panel active" id="panel-creator">
-<div class="card">
-<div class="card-title">Register as Creator</div>
-<div class="field"><label>CONTENT ID</label><input type="text" id="contentId" placeholder="@yourhandle"/></div>
-<button class="btn btn-primary" onclick="registerCreator()">Register</button>
-<div class="status" id="registerStatus"></div>
-</div>
-<div class="card">
-<div class="card-title">Your Profile</div>
-<button class="btn btn-outline" onclick="loadProfile()" style="margin-bottom:12px;">Load Profile</button>
-<div id="profileData"></div>
-</div>
+  <div class="card">
+    <div class="card-title">Register as Creator</div>
+    <div class="field"><label>Content ID</label><input type="text" id="contentId" placeholder="@yourhandle"/></div>
+    <button class="btn" onclick="registerCreator()">Register</button>
+    <div class="status" id="registerStatus"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Your Profile</div>
+    <button class="btn-outline" onclick="loadProfile()">Load Profile</button>
+    <div id="profileData" style="margin-top:10px;font-size:13px;color:#aaa;"></div>
+  </div>
 </div>
 <div class="panel" id="panel-admin">
-<div class="card">
-<div class="card-title">Fund Pool</div>
-<div class="field"><label>AMOUNT (USDC)</label><input type="number" id="fundAmount" placeholder="1.0" step="0.1"/></div>
-<button class="btn btn-primary" onclick="fundPool()">Fund Pool</button>
-<div class="status" id="fundStatus"></div>
-</div>
-<div class="card">
-<div class="card-title">Trigger Payout</div>
-<div class="field"><label>CREATOR WALLET</label><input type="text" id="payoutCreator" placeholder="0x..."/></div>
-<div class="field"><label>ENGAGEMENTS</label><input type="number" id="payoutEngagements" placeholder="10"/></div>
-<button class="btn btn-primary" onclick="triggerPayout()">Trigger Payout</button>
-<div class="status" id="payoutStatus"></div>
-</div>
-<div class="card">
-<div class="card-title">Contract Addresses</div>
-<label>REGISTRY</label><div class="address">0x0727cE415814C23E74B59D754C4020dB2E28651c</div>
-<label style="margin-top:12px;">TRIGGER</label><div class="address">0xD4992Fbff51f3E75432569D7F1a808BD02bf0f04</div>
-</div>
+  <div class="card">
+    <div class="card-title">Fund Pool</div>
+    <div class="field"><label>Amount (USDC)</label><input type="number" id="fundAmount" placeholder="10"/></div>
+    <button class="btn" onclick="fundPool()">Fund Pool</button>
+    <div class="status" id="fundStatus"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Trigger Payout</div>
+    <div class="field"><label>Creator Wallet</label><input type="text" id="payoutCreator" placeholder="0x..."/></div>
+    <div class="field"><label>Engagements</label><input type="number" id="payoutEngagements" placeholder="100"/></div>
+    <button class="btn" onclick="triggerPayout()">Trigger Payout</button>
+    <div class="status" id="payoutStatus"></div>
+  </div>
 </div>
 <div class="panel" id="panel-activity">
-<div class="card">
-<div class="card-title">Activity Log</div>
-<div class="log" id="activityLog">
-<div class="log-entry info">> CreatorPay Agent initialized</div>
+  <div class="card">
+    <div class="card-title">Activity Log</div>
+    <div class="log" id="activityLog"><div class="log-entry">> CreatorPay Agent initialized</div></div>
+    <button class="btn-outline" onclick="document.getElementById('activityLog').innerHTML=''" style="margin-top:8px;">Clear Log</button>
+  </div>
 </div>
-<button class="btn btn-outline" style="margin-top:12px;" onclick="clearLog()">Clear Log</button>
-</div>
-</div>
+<div style="margin-top:16px;font-size:11px;color:#333;text-align:center;">
+  Registry: 0x0727...651c &nbsp;|&nbsp; Trigger: 0xD499...f04
 </div>
 <script>
-const REGISTRY_ADDRESS="0x0727cE415814C23E74B59D754C4020dB2E28651c";
-const TRIGGER_ADDRESS="0xD4992Fbff51f3E75432569D7F1a808BD02bf0f04";
-const RPC_URL="https://rpc.testnet.arc.network";
-const REGISTRY_ABI=["function register(string calldata contentId) external","function isRegistered(address wallet) external view returns (bool)","function getCreator(address wallet) external view returns (tuple(address wallet,string contentId,bool isRegistered,uint256 totalEarned))","function getCreatorCount() external view returns (uint256)"];
-const TRIGGER_ABI=["function triggerPayout(address creator,uint256 engagements) external","function getPoolBalance() external view returns (uint256)"];
-let provider,signer,userAddress;
-function log(msg,type="info"){const l=document.getElementById("activityLog");const e=document.createElement("div");e.className="log-entry "+type;e.textContent="["+new Date().toLocaleTimeString()+"] "+msg;l.appendChild(e);l.scrollTop=l.scrollHeight;}
-function clearLog(){document.getElementById("activityLog").innerHTML="";}
-function setStatus(id,msg,type){const e=document.getElementById(id);e.textContent=msg;e.className="status "+type;}
-function switchTab(tab){
-var panels=['panel-creator','panel-admin','panel-activity'];
-var tabs=document.querySelectorAll('.tab');
-panels.forEach(function(id){document.getElementById(id).style.display='none';});
-document.getElementById('panel-'+tab).style.display='block';
-tabs.forEach(function(t){t.style.opacity='0.5';});
-var idx={'creator':0,'admin':1,'activity':2}[tab];
-if(tabs[idx])tabs[idx].style.opacity='1';
-});document.querySelectorAll(".panel").forEach(p=>{p.classList.remove("active");p.style.display="none";});var el=document.getElementById("panel-"+tab);el.classList.add("active");el.style.display="block";}
-async function connectWallet(){try{if(!window.ethereum){alert("Open in MetaMask browser");return;}const accs=await window.ethereum.request({method:'eth_requestAccounts'});if(!accs||accs.length===0){alert("No accounts");return;}provider=new ethers.BrowserProvider(window.ethereum);signer=await provider.getSigner();userAddress=accs[0];const btn=document.getElementById("connectBtn");btn.textContent=userAddress.slice(0,6)+"..."+userAddress.slice(-4);btn.classList.add("connected");log("Wallet connected: "+userAddress,"success");await loadStats();}catch(e){alert("Error: "+e.message);}}
-async function loadStats(){try{const rp=new ethers.JsonRpcProvider('https://arc-testnet.drpc.org');const reg=new ethers.Contract(REGISTRY_ADDRESS,REGISTRY_ABI,rp);const trig2=new ethers.Contract(TRIGGER_ADDRESS,TRIGGER_ABI,rp);const pool=await trig2.getPoolBalance();document.getElementById('poolBalance').textContent=ethers.formatUnits(pool,6)+' USDC';const total=await reg.getCreatorCount();document.getElementById('totalCreators').textContent=total.toString();if(signer){const addr=await signer.getAddress();const creator=await reg.getCreator(addr);document.getElementById('myEarnings').textContent=ethers.formatUnits(creator.totalEarned,6)+' USDC';}}catch(e){console.log('Stats error:',e.message);document.getElementById('totalCreators').textContent='ERR:'+e.message.substring(0,20);}}
-  }catch(e){ console.log('Stats error:',e.message); }
-}
-window.addEventListener("load",async()=>{var cb=document.getElementById("connectBtn");cb.addEventListener("touchend",function(e){e.preventDefault();connectWallet();});document.getElementById("connectBtn").addEventListener("click",connectWallet);try{await loadStats();}catch(e){console.log("load error:",e.message);}});
-</script>
-<div id="jserr" style="color:red;padding:10px;font-size:12px;"></div><script>
-const RPC_URL='https://arc-testnet.drpc.org';
 const REGISTRY_ADDRESS='0x0727cE415814C23E74B59D754C4020dB2E28651c';
 const TRIGGER_ADDRESS='0xD4992Fbff51f3E75432569D7F1a808BD02bf0f04';
 const REGISTRY_ABI=["function register(string calldata contentId) external","function isRegistered(address wallet) external view returns (bool)","function getCreator(address wallet) external view returns (tuple(address wallet,string contentId,bool isRegistered,uint256 totalEarned))","function getCreatorCount() external view returns (uint256)"];
-
+const TRIGGER_ABI=["function triggerPayout(address creator,uint256 engagements) external","function getPoolBalance() external view returns (uint256)"];
 let provider,signer,userAddress;
 
-function log(msg,type='info'){const el=document.getElementById('activityLog');const d=document.createElement('div');d.style.color=type==='error'?'#ff4466':type==='success'?'#00ff88':'#aaa';d.textContent='> '+msg;el.appendChild(d);}
-function setStatus(id,msg,type){const el=document.getElementById(id);if(el){el.textContent=msg;el.className='status '+type;}}
-function showPanel(id){document.querySelectorAll('.panel').forEach(p=>p.style.display='none');document.getElementById('panel-'+id).style.display='block';}
-
-async function connectWallet(){
-  if(!window.ethereum){alert('Open in MetaMask browser');return;}
-  try{
-    const accs=await window.ethereum.request({method:'eth_requestAccounts'});
-    provider=new ethers.BrowserProvider(window.ethereum);
-    signer=await provider.getSigner();
-    userAddress=accs[0];
-    const btn=document.getElementById('connectBtn');
-    btn.textContent=userAddress.slice(0,6)+'...'+userAddress.slice(-4);
-    btn.style.background='#00cc66';
-    log('Wallet connected: '+userAddress,'success');
-    await loadStats();
-  }catch(e){alert('Error: '+e.message);}
+function log(msg,type='info'){
+  const l=document.getElementById('activityLog');
+  const e=document.createElement('div');
+  e.className='log-entry '+(type||'');
+  e.textContent='> '+msg;
+  l.appendChild(e);
+  l.scrollTop=l.scrollHeight;
 }
+
+function setStatus(id,msg,type){
+  const e=document.getElementById(id);
+  e.textContent=msg;
+  e.className='status '+type;
+}
+
+function switchTab(tab){
+  ['creator','admin','activity'].forEach(function(t){
+    document.getElementById('tab-'+t).className='tab';
+    document.getElementById('panel-'+t).className='panel';
+    document.getElementById('panel-'+t).style.display='none';
+  });
+  document.getElementById('tab-'+tab).className='tab active';
+  document.getElementById('panel-'+tab).className='panel active';
+  document.getElementById('panel-'+tab).style.display='block';
+}
+
+document.getElementById('connectBtn').onclick=function(){
+  if(!window.ethereum){alert('Open in MetaMask browser');return;}
+  window.ethereum.request({method:'eth_requestAccounts'}).then(function(accs){
+    provider=new ethers.BrowserProvider(window.ethereum);
+    provider.getSigner().then(function(s){
+      signer=s;
+      userAddress=accs[0];
+      document.getElementById('connectBtn').textContent=userAddress.slice(0,6)+'...'+userAddress.slice(-4);
+      document.getElementById('connectBtn').style.background='#00ff88';
+      document.getElementById('connectBtn').style.color='#000';
+      log('Wallet connected: '+userAddress,'success');
+      loadStats();
+    });
+  }).catch(function(e){alert('Error: '+e.message);});
+};
 
 async function loadStats(){
   try{
-    const rp=new ethers.JsonRpcProvider(RPC_URL);
+    const rp=new ethers.JsonRpcProvider('https://arc-testnet.drpc.org');
     const reg=new ethers.Contract(REGISTRY_ADDRESS,REGISTRY_ABI,rp);
+    const trig=new ethers.Contract(TRIGGER_ADDRESS,TRIGGER_ABI,rp);
+    const pool=await trig.getPoolBalance();
+    document.getElementById('poolBalance').textContent=ethers.formatUnits(pool,6)+' USDC';
     const total=await reg.getCreatorCount();
     document.getElementById('totalCreators').textContent=total.toString();
     if(signer){
@@ -212,10 +176,10 @@ async function registerCreator(){
 async function loadProfile(){
   if(!signer){alert('Connect wallet first');return;}
   try{
-    const rp=new ethers.JsonRpcProvider(RPC_URL);
+    const rp=new ethers.JsonRpcProvider('https://arc-testnet.drpc.org');
     const reg=new ethers.Contract(REGISTRY_ADDRESS,REGISTRY_ABI,rp);
     const c=await reg.getCreator(userAddress);
-    document.getElementById('profileData').innerHTML='<p>Handle: '+c.contentId+'</p><p>Earned: '+ethers.formatUnits(c.totalEarned,6)+' USDC</p>';
+    document.getElementById('profileData').innerHTML='Handle: '+c.contentId+'<br>Earned: '+ethers.formatUnits(c.totalEarned,6)+' USDC';
   }catch(e){document.getElementById('profileData').textContent='Error: '+e.message;}
 }
 
@@ -229,6 +193,7 @@ async function fundPool(){
     const tx=await trig.fundPool(ethers.parseUnits(amt,6));
     await tx.wait();
     setStatus('fundStatus','Funded '+amt+' USDC','success');
+    log('Pool funded: '+amt+' USDC','success');
     await loadStats();
   }catch(e){setStatus('fundStatus','Error: '+e.message,'error');}
 }
@@ -249,9 +214,10 @@ async function triggerPayout(){
   }catch(e){setStatus('payoutStatus','Error: '+e.message,'error');}
 }
 
-window.addEventListener('load',async()=>{
-  document.getElementById('connectBtn').onclick=connectWallet;document.getElementById('panel-admin').style.display='none';document.getElementById('panel-activity').style.display='none';document.getElementById('panel-creator').style.display='block';
-  
-  try{await loadStats();}catch(e){}
+window.addEventListener('load',function(){
+  switchTab('creator');
+  loadStats();
 });
-</script></body>
+</script>
+</body>
+</html>
