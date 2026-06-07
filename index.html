@@ -82,9 +82,9 @@ input::placeholder{color:var(--muted);}
 <div class="stat-card"><div class="stat-label">Your Earnings</div><div class="stat-value" id="myEarnings">—</div></div>
 </div>
 <p style="text-align:center;color:#aaa;font-size:14px;margin:8px 0 16px;">Automated USDC payroll for creators — powered by Arc.</p><div class="tabs">
-<label for="t1" class="tab" onclick="switchTab('creator')">🎨 Creator</label>
-<label for="t2" class="tab" onclick="switchTab('admin')">⚙️ Admin</label>
-<label for="t3" class="tab" onclick="switchTab('activity')">📋 Activity</label>
+<label class="tab" onclick="switchTab('creator')"style="cursor:pointer;display:inline-block;">🎨 Creator</label>
+<label class="tab" onclick="switchTab('admin')" style="cursor:pointer;display:inline-block;">⚙️ Admin</label>
+<label class="tab" onclick="switchTab('activity')" style="cursor:pointer;display:inline-block;">📋 Activity</label>
 </div>
 <input type="radio" name="tab" id="t1" checked style="display:none">
 <input type="radio" name="tab" id="t2" style="display:none">
