@@ -157,10 +157,10 @@ function switchTab(tab){
   document.getElementById('panel-'+tab).style.display='block';
 }
 
-window.addEventListener('walletConnected', function(e){
+window.addEventListener('walletConnected', async function(e){
   const address = e.detail.address;
   window._wcAddress = address;
-  provider = new ethers.BrowserProvider(window.ethereum || window.AppKit?.provider);
+  const wcProvider = window.appKitModal?.getWalletProvider() || window.ethereum; provider = new ethers.BrowserProvider(wcProvider);
   provider.getSigner().then(s => { signer = s; userAddress = address; loadStats(); });
   const btn = document.getElementById('connectBtn');
   btn.textContent = address.slice(0,6)+'...'+address.slice(-4);
