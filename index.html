@@ -38,6 +38,37 @@ body{background:#0a0a0a;color:#fff;font-family:monospace;padding:20px;max-width:
 .log-entry.success{color:#00ff88;}
 .log-entry.error{color:#ff4466;}
 </style>
+<script type="module">
+  import { createAppKit } from 'https://cdn.jsdelivr.net/npm/@reown/appkit@1.6.8/dist/exports/index.js';
+  import { EthersAdapter } from 'https://cdn.jsdelivr.net/npm/@reown/appkit-adapter-ethers@1.6.8/dist/exports/index.js';
+  window._initAppKit = function() {
+    const arcTestnet = {
+      id: 5042002,
+      name: 'Arc Testnet',
+      network: 'arc-testnet',
+      nativeCurrency: { name: 'USDC', symbol: 'USDC', decimals: 18 },
+      rpcUrls: { default: { http: ['https://rpc.testnet.arc.network'] } }
+    };
+    const adapter = new EthersAdapter();
+    const modal = createAppKit({
+      adapters: [adapter],
+      networks: [arcTestnet],
+      projectId: 'b56e18d47c72ab683b10814fe9495694',
+      features: { analytics: false }
+    });
+    modal.subscribeAccount(({ address, isConnected }) => {
+      if (isConnected && address) {
+        window._wcAddress = address;
+        window._wcConnected = true;
+        document.getElementById('connectBtn').textContent = address.slice(0,6)+'...'+address.slice(-4);
+        document.getElementById('connectBtn').style.background = '#00ff88';
+        document.getElementById('connectBtn').style.color = '#000';
+      }
+    });
+    window._modal = modal;
+  };
+  window._initAppKit();
+</script>
 </head>
 <body>
 <div class="header">
@@ -126,7 +157,7 @@ function switchTab(tab){
   document.getElementById('panel-'+tab).style.display='block';
 }
 
-document.getElementById('connectBtn').onclick=function(){
+document.getElementById('connectBtn').onclick=function(){if(window._modal){window._modal.open();return;}
   if(!window.ethereum){alert('Open in MetaMask browser');return;}
   window.ethereum.request({method:'eth_requestAccounts'}).then(function(accs){
     provider=new ethers.BrowserProvider(window.ethereum);
