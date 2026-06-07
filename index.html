@@ -38,12 +38,11 @@ body{background:#0a0a0a;color:#fff;font-family:monospace;padding:20px;max-width:
 .log-entry.success{color:#00ff88;}
 .log-entry.error{color:#ff4466;}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@web3modal/cdn@1.0.0/dist/index.js"></script>
 </head>
 <body>
 <div class="header">
   <div class="logo">Creator<span>Pay</span></div>
-  <appkit-button id="connectBtn"></appkit-button>
+  <button class="connect-btn" id="connectBtn">Connect Wallet</button>
 </div>
 <div class="stat-grid">
   <div class="stat-card"><div class="stat-label">Pool Balance</div><div class="stat-value" id="poolBalance">—</div></div>
@@ -127,18 +126,6 @@ function switchTab(tab){
   document.getElementById('panel-'+tab).style.display='block';
 }
 
-const modal = window.createWeb3Modal({
-  projectId: 'b56e18d47c72ab683b10814fe9495694',
-  chains: [{id: 5042002, name: 'Arc Testnet', network: 'arc-testnet', nativeCurrency: {name:'USDC',symbol:'USDC',decimals:18}, rpcUrls:{default:{http:['https://rpc.testnet.arc.network']}}}],
-  enableAnalytics: false
-});
-modal.subscribeProvider(({address,isConnected})=>{
-  if(isConnected&&address){
-    userAddress=address;
-    provider=new ethers.BrowserProvider(window.ethereum);
-    provider.getSigner().then(s=>{signer=s;loadStats();});
-  }
-});
 document.getElementById('connectBtn').onclick=function(){
   if(!window.ethereum){alert('Open in MetaMask browser');return;}
   window.ethereum.request({method:'eth_requestAccounts'}).then(function(accs){
