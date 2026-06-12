@@ -38,10 +38,12 @@ body{background:#0a0a0a;color:#fff;font-family:monospace;padding:20px;max-width:
 .log-entry.success{color:#00ff88;}
 .log-entry.error{color:#ff4466;}
 </style>
-<script type="module">
-  import { createAppKit } from 'https://cdn.jsdelivr.net/npm/@reown/appkit@1.7.0/dist/exports/index.js';
-  import { EthersAdapter } from 'https://cdn.jsdelivr.net/npm/@reown/appkit-adapter-ethers@1.7.0/dist/exports/index.js';
+<script src="https://cdn.jsdelivr.net/npm/@reown/appkit@1.7.0/dist/appkit.iife.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@reown/appkit-adapter-ethers@1.7.0/dist/appkit-adapter-ethers.iife.js"></script>
+<script>
   window._initAppKit = function() {
+    const { createAppKit } = window.AppKit;
+    const { EthersAdapter } = window.AppKitAdapterEthers;
     const arcTestnet = {
       id: 5042002,
       name: 'Arc Testnet',
