@@ -106,8 +106,16 @@ body{background:#0a0a0a;color:#fff;font-family:monospace;padding:20px;max-width:
 <div class="panel" id="panel-admin">
   <div class="card">
     <div class="card-title">Fund Pool</div>
+    <div class="field"><label>Source Chain</label>
+      <select id="fundChain" style="width:100%;background:#0a0a0a;border:1px solid #333;border-radius:6px;padding:10px;color:#fff;font-size:14px;">
+        <option value="arc">Arc Testnet (direct)</option>
+        <option value="base">Base Sepolia</option>
+        <option value="arbitrum">Arbitrum Sepolia</option>
+        <option value="ethereum">Ethereum Sepolia</option>
+      </select>
+    </div>
     <div class="field"><label>Amount (USDC)</label><input type="number" id="fundAmount" placeholder="10"/></div>
-    <button class="btn" onclick="fundPool()">Fund Pool</button>
+    <button class="btn" onclick="fundPool()">Fund Pool via Circle</button>
     <div class="status" id="fundStatus"></div>
   </div>
   <div class="card">
@@ -232,14 +240,31 @@ async function loadProfile(){
 async function fundPool(){
   if(!signer){alert('Connect wallet first');return;}
   const amt=document.getElementById('fundAmount').value;
+  const chain=document.getElementById('fundChain').value;
   if(!amt){setStatus('fundStatus','Amount required','error');return;}
-  setStatus('fundStatus','Funding...','loading');
+  setStatus('fundStatus','Initiating deposit via Circle...','loading');
   try{
-    const trig=new ethers.Contract(TRIGGER_ADDRESS,TRIGGER_ABI,signer);
-    const tx=await trig.fundPool(ethers.parseUnits(amt,6));
-    await tx.wait();
-    setStatus('fundStatus','Funded '+amt+' USDC! <a href="https://testnet.arcscan.app/tx/'+tx.hash+'" target="_blank" style="color:#00ff88">View on ArcScan ↗</a>','success');
-    log('Pool funded: '+amt+' USDC','success');
+    if(chain==='arc'){
+      const trig=new ethers.Contract(TRIGGER_ADDRESS,TRIGGER_ABI,signer);
+      const tx=await trig.fundPool(ethers.parseUnits(amt,6));
+      await tx.wait();
+      setStatus('fundStatus','Funded '+amt+' USDC! <a href="https://testnet.arcscan.app/tx/'+tx.hash+'" target="_blank" style="color:#00ff88">View on ArcScan ↗</a>','success');
+      log('Pool funded: '+amt+' USDC on Arc','success');
+    } else {
+      const addr=await signer.getAddress();
+      const res=await fetch('https://kebsprotocol.onrender.com/api/creatorpay/deposit',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({fromChain:chain,amount:amt,walletAddress:addr})
+      });
+      const data=await res.json();
+      if(data.success){
+        setStatus('fundStatus','Cross-chain deposit initiated from '+chain+'! Funds arriving on Arc via Circle Unified Balance.','success');
+        log('Cross-chain deposit: '+amt+' USDC from '+chain,'success');
+      } else {
+        setStatus('fundStatus','Error: '+data.error,'error');
+      }
+    }
     await loadStats();
   }catch(e){setStatus('fundStatus','Error: '+e.message,'error');}
 }
