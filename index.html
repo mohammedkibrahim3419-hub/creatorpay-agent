@@ -38,36 +38,26 @@ body{background:#0a0a0a;color:#fff;font-family:monospace;padding:20px;max-width:
 .log-entry.success{color:#00ff88;}
 .log-entry.error{color:#ff4466;}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@reown/appkit@1.7.0/dist/appkit.iife.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@reown/appkit-adapter-ethers@1.7.0/dist/appkit-adapter-ethers.iife.js"></script>
 <script>
   window._initAppKit = function() {
-    const { createAppKit } = window.AppKit;
-    const { EthersAdapter } = window.AppKitAdapterEthers;
-    const arcTestnet = {
-      id: 5042002,
-      name: 'Arc Testnet',
-      network: 'arc-testnet',
-      nativeCurrency: { name: 'USDC', symbol: 'USDC', decimals: 18 },
-      rpcUrls: { default: { http: ['https://rpc.testnet.arc.network'] } }
-    };
-    const adapter = new EthersAdapter();
-    const modal = createAppKit({
-      adapters: [adapter],
-      networks: [arcTestnet],
-      projectId: 'b56e18d47c72ab683b10814fe9495694',
-      features: { analytics: false }
-    });
-    modal.subscribeAccount(({ address, isConnected }) => {
-      if (isConnected && address) {
-        window._wcAddress = address;
-        window._wcConnected = true;
-        document.getElementById('connectBtn').textContent = address.slice(0,6)+'...'+address.slice(-4);
-        document.getElementById('connectBtn').style.background = '#00ff88';
-        document.getElementById('connectBtn').style.color = '#000';
+    // Direct MetaMask connect - no AppKit needed
+    window._modal = {
+      open: function() {
+        if(!window.ethereum){ alert('Please open in MetaMask browser'); return; }
+        window.ethereum.request({method:'eth_requestAccounts'}).then(function(accs){
+          if(accs && accs[0]){
+            const address = accs[0];
+            window._wcAddress = address;
+            window._wcConnected = true;
+            document.getElementById('connectBtn').textContent = address.slice(0,6)+'...'+address.slice(-4);
+            document.getElementById('connectBtn').style.background = '#00ff88';
+            document.getElementById('connectBtn').style.color = '#000';
+            window.dispatchEvent(new CustomEvent('walletConnected', { detail: { address } }));
+          }
+        }).catch(e => console.log('Connect error:',e));
       }
-    });
-    window._modal = modal;
+    };
+    window.appKitModal = window._modal;
   };
   window._initAppKit();
 </script>
