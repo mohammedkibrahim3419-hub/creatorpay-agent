@@ -172,8 +172,12 @@ function switchTab(tab){
 window.addEventListener('walletConnected', async function(e){
   const address = e.detail.address;
   window._wcAddress = address;
-  const wcProvider = window.appKitModal?.getWalletProvider() || window.ethereum; provider = new ethers.BrowserProvider(wcProvider);
-  provider.getSigner().then(s => { signer = s; userAddress = address; loadStats(); });
+  const tryConnect = (retry) => {
+    const wcProvider = window.appKitModal?.getWalletProvider() || window.ethereum;
+    if(wcProvider){ provider = new ethers.BrowserProvider(wcProvider); provider.getSigner().then(s => { signer = s; userAddress = address; loadStats(); }); }
+    else if(retry > 0){ setTimeout(() => tryConnect(retry-1), 500); }
+  };
+  tryConnect(4);
   const btn = document.getElementById('connectBtn');
   btn.textContent = address.slice(0,6)+'...'+address.slice(-4);
   btn.style.background = '#00ff88';
@@ -198,7 +202,7 @@ if(window.appKitModal){ window.appKitModal.open(); return; }if(window._modal){wi
 
 async function loadStats(){
   try{
-    const rp=new ethers.JsonRpcProvider('https://arc-testnet.drpc.org');
+    const rp=new ethers.JsonRpcProvider('https://rpc.testnet.arc.network');
     const reg=new ethers.Contract(REGISTRY_ADDRESS,REGISTRY_ABI,rp);
     const trig=new ethers.Contract(TRIGGER_ADDRESS,TRIGGER_ABI,rp);
     const pool=await trig.getPoolBalance();
@@ -230,7 +234,7 @@ async function registerCreator(){
 async function loadProfile(){
   if(!signer){alert('Connect wallet first');return;}
   try{
-    const rp=new ethers.JsonRpcProvider('https://arc-testnet.drpc.org');
+    const rp=new ethers.JsonRpcProvider('https://rpc.testnet.arc.network');
     const reg=new ethers.Contract(REGISTRY_ADDRESS,REGISTRY_ABI,rp);
     const c=await reg.getCreator(userAddress);
     document.getElementById('profileData').innerHTML='Handle: '+c.contentId+'<br>Earned: '+ethers.formatUnits(c.totalEarned,6)+' USDC';
