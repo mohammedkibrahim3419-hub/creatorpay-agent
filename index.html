@@ -255,7 +255,7 @@ async function fundPool(){
       // Get best route via LiFi
       const chainIds={'base':84532,'arbitrum':421614,'ethereum':11155111};
       const fromChainId=chainIds[chain]||84532;
-      setStatus('fundStatus','Finding best route via LiFi...','loading');
+      const fromChainId=chainIds[chain]||84532;try{await window.ethereum.request({method:'wallet_switchEthereumChain',params:[{chainId:'0x'+fromChainId.toString(16)}]});}catch(e){setStatus('fundStatus','Switch to '+chain+' in MetaMask first','error');return;}setStatus('fundStatus','Finding best route via LiFi...','loading');
       const routeRes=await fetch('https://li.quest/v1/quote?fromChain='+fromChainId+'&toChain=5042002&fromToken=USDC&toToken=USDC&fromAmount='+ethers.parseUnits(amt,6)+'&fromAddress='+addr+'&toAddress=0x02d29fb5e7e52598fbee698f11286b78b4562415');
       const routeData=await routeRes.json();
       if(routeData.transactionRequest){
