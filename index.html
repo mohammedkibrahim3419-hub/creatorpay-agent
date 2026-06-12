@@ -252,17 +252,20 @@ async function fundPool(){
       log('Pool funded: '+amt+' USDC on Arc','success');
     } else {
       const addr=await signer.getAddress();
-      const res=await fetch('https://kebsprotocol.onrender.com/api/creatorpay/deposit',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({fromChain:chain,amount:amt,walletAddress:addr})
-      });
-      const data=await res.json();
-      if(data.success){
-        setStatus('fundStatus','Cross-chain deposit initiated from '+chain+'! Funds arriving on Arc via Circle Unified Balance.','success');
-        log('Cross-chain deposit: '+amt+' USDC from '+chain,'success');
+      // Get best route via LiFi
+      const chainIds={'base':84532,'arbitrum':421614,'ethereum':11155111};
+      const fromChainId=chainIds[chain]||84532;
+      setStatus('fundStatus','Finding best route via LiFi...','loading');
+      const routeRes=await fetch('https://li.quest/v1/quote?fromChain='+fromChainId+'&toChain=5042002&fromToken=USDC&toToken=USDC&fromAmount='+ethers.parseUnits(amt,6)+'&fromAddress='+addr+'&toAddress=0x02d29fb5e7e52598fbee698f11286b78b4562415');
+      const routeData=await routeRes.json();
+      if(routeData.transactionRequest){
+        setStatus('fundStatus','Route found via LiFi! Confirm in wallet...','loading');
+        const tx=await signer.sendTransaction(routeData.transactionRequest);
+        await tx.wait();
+        setStatus('fundStatus','Cross-chain deposit confirmed via LiFi! <a href="https://testnet.arcscan.app/tx/'+tx.hash+'" target="_blank" style="color:#00ff88">View on ArcScan ↗</a>','success');
+        log('LiFi cross-chain: '+amt+' USDC from '+chain+' → Arc','success');
       } else {
-        setStatus('fundStatus','Error: '+data.error,'error');
+        setStatus('fundStatus','No route found. Try Arc Testnet direct.','error');
       }
     }
     await loadStats();
