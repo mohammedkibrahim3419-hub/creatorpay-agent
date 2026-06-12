@@ -165,7 +165,7 @@ window.addEventListener('walletConnected', async function(e){
   const address = e.detail.address;
   window._wcAddress = address;
   const tryConnect = (retry) => {
-    const wcProvider = window.appKitModal?.getWalletProvider() || window.ethereum;
+    const wcProvider = window.ethereum;
     if(wcProvider){ provider = new ethers.BrowserProvider(wcProvider); provider.getSigner().then(s => { signer = s; userAddress = address; loadStats(); }); }
     else if(retry > 0){ setTimeout(() => tryConnect(retry-1), 500); }
   };
