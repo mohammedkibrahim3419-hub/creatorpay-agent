@@ -67,7 +67,8 @@ body{background:#0a0a0a;color:#fff;font-family:monospace;padding:20px;max-width:
   <div class="logo">Creator<span>Pay</span></div>
   <button class="connect-btn" id="connectBtn">Connect Wallet</button>
 </div>
-<div style="background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.15);border-radius:10px;padding:10px 14px;margin:10px 0;display:flex;justify-content:space-between;align-items:center;">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0;">
+  <div style="background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.15);border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
   <div>
     <div style="color:#00ff88;font-size:11px;font-weight:600;letter-spacing:1px;">🔒 PRIVACY MODE</div>
     <div style="color:#555;font-size:10px;margin-top:2px;">Powered by Arc Privacy Sector · Coming Soon</div>
@@ -76,6 +77,17 @@ body{background:#0a0a0a;color:#fff;font-family:monospace;padding:20px;max-width:
     <input type="checkbox" disabled style="opacity:0;width:0;height:0;" id="privacyToggle">
     <span onclick="alert('Arc Privacy Sector integration coming soon. Payroll amounts and recipient addresses will be shielded inside the private EVM.')" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#1a1a1a;border:1px solid #333;border-radius:22px;transition:.3s;"></span>
   </label>
+  </div>
+  <div style="background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.15);border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+    <div>
+      <div style="color:#00ff88;font-size:11px;font-weight:600;letter-spacing:1px;">⚡ GASLESS MODE</div>
+      <div style="color:#555;font-size:10px;margin-top:2px;">Circle Paymaster · Coming Soon</div>
+    </div>
+    <label style="position:relative;display:inline-block;width:40px;height:22px;">
+      <input type="checkbox" disabled style="opacity:0;width:0;height:0;">
+      <span onclick="alert('Gasless Mode coming soon. Circle Paymaster will sponsor gas fees so creators transact with zero USDC cost.')" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#1a1a1a;border:1px solid #333;border-radius:22px;transition:.3s;"></span>
+    </label>
+  </div>
 </div>
 <div class="stat-grid">
   <div class="stat-card"><div class="stat-label">Pool Balance</div><div class="stat-value" id="poolBalance">—</div></div>
