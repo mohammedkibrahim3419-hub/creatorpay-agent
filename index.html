@@ -145,6 +145,61 @@ body{background:#0a0a0a;color:#fff;font-family:monospace;padding:20px;max-width:
     <div class="status" id="payoutStatus"></div>
   </div>
 </div>
+<div class="panel" id="panel-info">
+  <div class="card">
+    <div class="card-title">🔒 Security</div>
+    <div style="font-size:12px;color:#aaa;line-height:1.8;">
+      <div style="margin-bottom:6px;">Contracts are open source and verifiable on ArcScan.</div>
+      <div style="margin-bottom:4px;"><span style="color:#00ff88">Registry:</span> <a href="https://testnet.arcscan.app/address/0x0727cE415814C23E74B59D754C4020dB2E28651c" target="_blank" style="color:#555;font-size:11px;">0x0727...651c ↗</a></div>
+      <div style="margin-bottom:4px;"><span style="color:#00ff88">Trigger:</span> <a href="https://testnet.arcscan.app/address/0xD4992Fbff51f3E75432569D7F1a808BD02bf0f04" target="_blank" style="color:#555;font-size:11px;">0xD499...f04 ↗</a></div>
+      <div style="margin-top:8px;padding:8px;background:#0a0a0a;border-radius:6px;border-left:2px solid #00ff88;">
+        ⚠️ This is a testnet deployment. Do not use real funds.
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">❓ Help</div>
+    <div style="font-size:12px;color:#aaa;line-height:2;">
+      <div><span style="color:#00ff88">1.</span> Connect your MetaMask wallet (Arc Testnet)</div>
+      <div><span style="color:#00ff88">2.</span> Go to Creator tab → register your handle</div>
+      <div><span style="color:#00ff88">3.</span> Admin funds the pool with USDC</div>
+      <div><span style="color:#00ff88">4.</span> Admin triggers payout based on engagements</div>
+      <div><span style="color:#00ff88">5.</span> USDC lands directly in your wallet</div>
+      <div style="margin-top:8px;padding:8px;background:#0a0a0a;border-radius:6px;">
+        Need testnet USDC? Use the <a href="https://faucet.circle.com" target="_blank" style="color:#00ff88;">Circle Faucet ↗</a>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">🛡️ Privacy</div>
+    <div style="font-size:12px;color:#aaa;line-height:1.8;">
+      <div style="margin-bottom:6px;">CreatorPay does not collect or store any personal data. All transactions are onchain and public on Arc Testnet.</div>
+      <div style="margin-bottom:6px;">Your wallet address is the only identifier used. No emails, no accounts, no tracking.</div>
+      <div style="padding:8px;background:#0a0a0a;border-radius:6px;border-left:2px solid #00ff88;">
+        🔒 <strong style="color:#00ff88">Coming Soon:</strong> Arc Privacy Sector will shield payroll amounts and recipient addresses inside the private EVM.
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">📜 About</div>
+    <div style="font-size:12px;color:#aaa;line-height:1.8;">
+      <div style="margin-bottom:6px;">CreatorPay is an autonomous USDC payroll agent for content creators, built on Arc Testnet and powered by Circle.</div>
+      <div style="margin-bottom:6px;">Creators register their handle onchain. Admins fund a pool and trigger payouts proportional to engagement. USDC settles in under 500ms.</div>
+      <div style="color:#555;font-size:11px;">Built by <a href="https://x.com/kibrahimD70212" target="_blank" style="color:#00ff88;">@kibrahimD70212</a> · Submitted to Ignyte Stablecoins Commerce Stack Challenge</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">🔗 Links</div>
+    <div style="font-size:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;">
+      <a href="https://testnet.arcscan.app" target="_blank" style="padding:8px;background:#0a0a0a;border:1px solid #222;border-radius:6px;color:#00ff88;text-decoration:none;text-align:center;">ArcScan ↗</a>
+      <a href="https://github.com/mohammedkibrahim3419-hub/creatorpay-agent" target="_blank" style="padding:8px;background:#0a0a0a;border:1px solid #222;border-radius:6px;color:#00ff88;text-decoration:none;text-align:center;">GitHub ↗</a>
+      <a href="https://faucet.circle.com" target="_blank" style="padding:8px;background:#0a0a0a;border:1px solid #222;border-radius:6px;color:#00ff88;text-decoration:none;text-align:center;">Faucet ↗</a>
+      <a href="https://developers.circle.com" target="_blank" style="padding:8px;background:#0a0a0a;border:1px solid #222;border-radius:6px;color:#00ff88;text-decoration:none;text-align:center;">Circle Docs ↗</a>
+      <a href="https://arc.io" target="_blank" style="padding:8px;background:#0a0a0a;border:1px solid #222;border-radius:6px;color:#00ff88;text-decoration:none;text-align:center;">Arc.io ↗</a>
+      <a href="https://x.com/kibrahimD70212" target="_blank" style="padding:8px;background:#0a0a0a;border:1px solid #222;border-radius:6px;color:#00ff88;text-decoration:none;text-align:center;">Twitter ↗</a>
+    </div>
+  </div>
+</div>
 <div class="panel" id="panel-activity">
   <div class="card">
     <div class="card-title">Recent Payouts</div>
@@ -183,7 +238,7 @@ function setStatus(id,msg,type){
 }
 
 function switchTab(tab){
-  ['creator','admin','activity'].forEach(function(t){
+  ['creator','admin','activity','info'].forEach(function(t){
     document.getElementById('tab-'+t).className='tab';
     document.getElementById('panel-'+t).className='panel';
     document.getElementById('panel-'+t).style.display='none';
