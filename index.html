@@ -141,7 +141,7 @@ body{background:#0a0a0a;color:#fff;font-family:monospace;padding:20px;max-width:
 <script>
 const REGISTRY_ADDRESS='0x0727cE415814C23E74B59D754C4020dB2E28651c';
 const TRIGGER_ADDRESS='0xD4992Fbff51f3E75432569D7F1a808BD02bf0f04';
-const REGISTRY_ABI=["function register(string calldata contentId) external","function isRegistered(address wallet) external view returns (bool)","function getCreator(address wallet) external view returns (tuple(address wallet,string contentId,bool isRegistered,uint256 totalEarned))","function getCreatorCount() external view returns (uint256)","function getCreatorAt(uint256 index) external view returns (address)"];
+const REGISTRY_ABI=["function register(string calldata contentId) external","function isRegistered(address wallet) external view returns (bool)","function getCreator(address wallet) external view returns (tuple(address wallet,string contentId,bool isRegistered,uint256 totalEarned))","function getCreatorCount() external view returns (uint256)","event CreatorRegistered(address indexed wallet,string contentId)"];
 const TRIGGER_ABI=["function triggerPayout(address creator,uint256 engagements) external","function getPoolBalance() external view returns (uint256)","function fundPool(uint256 amount) external","event PayoutSent(address indexed creator,uint256 amount,uint256 engagements)"];
 let provider,signer,userAddress;
 
@@ -234,19 +234,23 @@ async function loadCreatorList(){
   try {
     const rp = new ethers.JsonRpcProvider('https://rpc.testnet.arc.network');
     const reg = new ethers.Contract(REGISTRY_ADDRESS, REGISTRY_ABI, rp);
-    const count = await reg.getCreatorCount();
-    if(count == 0){ el.textContent = 'No creators registered yet.'; return; }
+    const filter = reg.filters.CreatorRegistered();
+    const events = await reg.queryFilter(filter, -100000);
+    if(events.length === 0){ el.textContent = 'No creators registered yet.'; return; }
+    // dedupe by address (keep latest)
+    const seen = {};
+    for(const ev of events){ seen[ev.args[0]] = ev; }
     let html = '';
-    for(let i = 0; i < count; i++){
-      const addr = await reg.getCreatorAt(i);
+    for(const addr of Object.keys(seen)){
       const c = await reg.getCreator(addr);
+      if(!c.isRegistered) continue;
       html += `<div style="padding:6px 0;border-bottom:1px solid #222;display:flex;justify-content:space-between;align-items:center;">
         <div><div style="color:#00ff88">${c.contentId}</div><div style="color:#555;font-size:11px">${addr.slice(0,6)}...${addr.slice(-4)}</div></div>
         <div style="text-align:right"><div>${ethers.formatUnits(c.totalEarned,6)} USDC</div>
         <button onclick="document.getElementById('payoutCreator').value='${addr}'" style="font-size:10px;background:#1a1a1a;color:#00ff88;border:1px solid #00ff88;padding:2px 6px;border-radius:4px;cursor:pointer">Select</button></div>
       </div>`;
     }
-    el.innerHTML = html;
+    el.innerHTML = html || 'No active creators.';
   } catch(e){ el.textContent = 'Error: '+e.message; }
 }
 
