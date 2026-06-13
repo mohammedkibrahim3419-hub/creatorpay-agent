@@ -209,7 +209,7 @@ async function loadRecentPayouts(){
     const rp = new ethers.JsonRpcProvider('https://rpc.testnet.arc.network');
     const trig = new ethers.Contract(TRIGGER_ADDRESS, TRIGGER_ABI, rp);
     const filter = trig.filters.PayoutSent();
-    const events = await trig.queryFilter(filter, -1000);
+    const events = await trig.queryFilter(filter, -5000);
     if(events.length === 0){ el.textContent = 'No payouts found.'; return; }
     let html = '';
     for(const ev of events.slice(-10).reverse()){
@@ -235,7 +235,7 @@ async function loadCreatorList(){
     const rp = new ethers.JsonRpcProvider('https://rpc.testnet.arc.network');
     const reg = new ethers.Contract(REGISTRY_ADDRESS, REGISTRY_ABI, rp);
     const filter = reg.filters.CreatorRegistered();
-    const events = await reg.queryFilter(filter, -100000);
+    const events = await reg.queryFilter(filter, -5000);
     if(events.length === 0){ el.textContent = 'No creators registered yet.'; return; }
     // dedupe by address (keep latest)
     const seen = {};
