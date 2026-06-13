@@ -231,7 +231,58 @@ function setStatus(id,msg,type){
   e.className='status '+type;
 }
 
+function bufToBase64(buf){
+  return btoa(String.fromCharCode(...new Uint8Array(buf)));
+}
+function base64ToBuf(b64){
+  return Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+}
+
+async function registerBiometric(){
+  try{
+    const challenge = crypto.getRandomValues(new Uint8Array(32));
+    const userId = crypto.getRandomValues(new Uint8Array(16));
+    const cred = await navigator.credentials.create({
+      publicKey: {
+        challenge,
+        rp: { name: 'CreatorPay', id: window.location.hostname },
+        user: { id: userId, name: 'admin', displayName: 'CreatorPay Admin' },
+        pubKeyCredParams: [{ alg: -7, type: 'public-key' }, { alg: -257, type: 'public-key' }],
+        authenticatorSelection: { authenticatorAttachment: 'platform', userVerification: 'required' },
+        timeout: 60000,
+        attestation: 'none'
+      }
+    });
+    localStorage.setItem('cp_biometric_cred', bufToBase64(cred.rawId));
+    return true;
+  }catch(e){ alert('Setup failed: '+e.message); return false; }
+}
+
+async function verifyBiometric(){
+  const storedId = localStorage.getItem('cp_biometric_cred');
+  if(!storedId) return await registerBiometric();
+  try{
+    const challenge = crypto.getRandomValues(new Uint8Array(32));
+    await navigator.credentials.get({
+      publicKey: {
+        challenge,
+        allowCredentials: [{ id: base64ToBuf(storedId), type: 'public-key' }],
+        userVerification: 'required',
+        timeout: 60000
+      }
+    });
+    return true;
+  }catch(e){ return false; }
+}
+
 function switchTab(tab){
+  if(tab === 'admin' && !window._biometricUnlocked){
+    verifyBiometric().then(ok => {
+      if(ok){ window._biometricUnlocked = true; switchTab('admin'); }
+      else { alert('Fingerprint verification required to access Admin.'); }
+    });
+    return;
+  }
   ['creator','admin','activity','info'].forEach(function(t){
     document.getElementById('tab-'+t).className='tab';
     document.getElementById('panel-'+t).className='panel';
