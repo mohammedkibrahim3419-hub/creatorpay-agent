@@ -238,7 +238,38 @@ function base64ToBuf(b64){
   return Uint8Array.from(atob(b64), c => c.charCodeAt(0));
 }
 
+async function hashPin(pin){
+  const enc = new TextEncoder().encode(pin);
+  const buf = await crypto.subtle.digest('SHA-256', enc);
+  return bufToBase64(buf);
+}
+
+async function setupPin(){
+  const pin = prompt('Set a PIN for Admin access (4-6 digits):');
+  if(!pin) return false;
+  const confirmPin = prompt('Confirm PIN:');
+  if(pin !== confirmPin){ alert('PINs do not match.'); return false; }
+  localStorage.setItem('cp_admin_pin', await hashPin(pin));
+  return true;
+}
+
+async function verifyPin(){
+  const stored = localStorage.getItem('cp_admin_pin');
+  if(!stored) return await setupPin();
+  const pin = prompt('Enter Admin PIN:');
+  if(!pin) return false;
+  const hash = await hashPin(pin);
+  if(hash === stored) return true;
+  alert('Incorrect PIN.');
+  return false;
+}
+
+function webauthnSupported(){
+  return !!(window.PublicKeyCredential && navigator.credentials);
+}
+
 async function registerBiometric(){
+  if(!webauthnSupported()) return await setupPin();
   try{
     const challenge = crypto.getRandomValues(new Uint8Array(32));
     const userId = crypto.getRandomValues(new Uint8Array(16));
@@ -255,10 +286,11 @@ async function registerBiometric(){
     });
     localStorage.setItem('cp_biometric_cred', bufToBase64(cred.rawId));
     return true;
-  }catch(e){ alert('Setup failed: '+e.message); return false; }
+  }catch(e){ return await setupPin(); }
 }
 
 async function verifyBiometric(){
+  if(!webauthnSupported()) return await verifyPin();
   const storedId = localStorage.getItem('cp_biometric_cred');
   if(!storedId) return await registerBiometric();
   try{
@@ -272,7 +304,7 @@ async function verifyBiometric(){
       }
     });
     return true;
-  }catch(e){ return false; }
+  }catch(e){ return await verifyPin(); }
 }
 
 function switchTab(tab){
