@@ -7,36 +7,36 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:#0a0a0a;color:#fff;font-family:monospace;padding:20px;max-width:480px;margin:0 auto;}
+body{background:#14101F;color:#F5F3FA;font-family:monospace;padding:20px;max-width:480px;margin:0 auto;}
 .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
 .logo{font-size:22px;font-weight:900;}
-.logo span{color:#00ff88;}
-.btn{background:#00ff88;color:#000;border:none;padding:12px 20px;border-radius:8px;font-weight:700;font-size:14px;width:100%;margin-top:8px;cursor:pointer;}
-.btn-outline{background:transparent;color:#00ff88;border:2px solid #00ff88;padding:10px 20px;border-radius:8px;font-weight:700;font-size:14px;width:100%;margin-top:8px;cursor:pointer;}
-.connect-btn{background:transparent;color:#00ff88;border:2px solid #00ff88;padding:8px 16px;border-radius:8px;font-weight:700;cursor:pointer;}
+.logo span{color:#E0B65C;}
+.btn{background:#E0B65C;color:#1A1428;border:none;padding:12px 20px;border-radius:8px;font-weight:700;font-size:14px;width:100%;margin-top:8px;cursor:pointer;}
+.btn-outline{background:transparent;color:#E0B65C;border:2px solid #E0B65C;padding:10px 20px;border-radius:8px;font-weight:700;font-size:14px;width:100%;margin-top:8px;cursor:pointer;}
+.connect-btn{background:transparent;color:#E0B65C;border:2px solid #E0B65C;padding:8px 16px;border-radius:8px;font-weight:700;cursor:pointer;}
 .stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px;}
-.stat-card{background:#111;border:1px solid #222;border-radius:10px;padding:14px;text-align:center;}
-.stat-label{font-size:10px;color:#666;margin-bottom:6px;text-transform:uppercase;}
-.stat-value{font-size:18px;font-weight:900;color:#00ff88;}
-.tagline{text-align:center;color:#aaa;font-size:13px;margin-bottom:16px;}
+.stat-card{background:#1E1830;border:1px solid #322B4A;border-radius:10px;padding:14px;text-align:center;}
+.stat-label{font-size:10px;color:#9D99BD;margin-bottom:6px;text-transform:uppercase;}
+.stat-value{font-size:18px;font-weight:900;color:#E0B65C;}
+.tagline{text-align:center;color:#C9C6DC;font-size:13px;margin-bottom:16px;}
 .tabs{display:flex;gap:8px;margin-bottom:16px;}
-.tab{flex:1;padding:10px;text-align:center;background:#111;border:1px solid #222;border-radius:8px;cursor:pointer;font-size:13px;color:#aaa;user-select:none;}
-.tab.active{background:#00ff88;color:#000;font-weight:700;border-color:#00ff88;}
+.tab{flex:1;padding:10px;text-align:center;background:#1E1830;border:1px solid #322B4A;border-radius:8px;cursor:pointer;font-size:13px;color:#C9C6DC;user-select:none;}
+.tab.active{background:#E0B65C;color:#1A1428;font-weight:700;border-color:#E0B65C;}
 .panel{display:none;}
 .panel.active{display:block;}
-.card{background:#111;border:1px solid #222;border-radius:12px;padding:16px;margin-bottom:12px;}
-.card-title{font-size:12px;font-weight:700;color:#00ff88;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;}
+.card{background:#1E1830;border:1px solid #322B4A;border-radius:12px;padding:16px;margin-bottom:12px;}
+.card-title{font-size:12px;font-weight:700;color:#E0B65C;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;}
 .field{margin-bottom:10px;}
-.field label{font-size:11px;color:#666;display:block;margin-bottom:4px;text-transform:uppercase;}
-.field input{width:100%;background:#0a0a0a;border:1px solid #333;border-radius:6px;padding:10px;color:#fff;font-size:14px;font-family:monospace;}
+.field label{font-size:11px;color:#9D99BD;display:block;margin-bottom:4px;text-transform:uppercase;}
+.field input{width:100%;background:#14101F;border:1px solid #3D3558;border-radius:6px;padding:10px;color:#F5F3FA;font-size:14px;font-family:monospace;}
 .status{display:none;padding:8px;border-radius:6px;font-size:12px;margin-top:8px;}
-.status.success{display:block;background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.3);color:#00ff88;}
-.status.error{display:block;background:rgba(255,68,102,0.1);border:1px solid rgba(255,68,102,0.3);color:#ff4466;}
-.status.loading{display:block;background:rgba(123,94,167,0.1);border:1px solid rgba(123,94,167,0.3);color:#b39ddb;}
-.log{background:#0a0a0a;border:1px solid #222;border-radius:8px;padding:12px;height:200px;overflow-y:auto;font-size:12px;}
-.log-entry{padding:2px 0;color:#aaa;}
-.log-entry.success{color:#00ff88;}
-.log-entry.error{color:#ff4466;}
+.status.success{display:block;background:rgba(224,182,92,0.1);border:1px solid rgba(224,182,92,0.3);color:#E0B65C;}
+.status.error{display:block;background:rgba(242,118,138,0.1);border:1px solid rgba(242,118,138,0.3);color:#F2768A;}
+.status.loading{display:block;background:rgba(201,168,255,0.1);border:1px solid rgba(201,168,255,0.3);color:#C9A8FF;}
+.log{background:#14101F;border:1px solid #322B4A;border-radius:8px;padding:12px;height:200px;overflow-y:auto;font-size:12px;}
+.log-entry{padding:2px 0;color:#C9C6DC;}
+.log-entry.success{color:#E0B65C;}
+.log-entry.error{color:#F2768A;}
 </style>
 <script>
   window._initAppKit = function() {
@@ -50,8 +50,8 @@ body{background:#0a0a0a;color:#fff;font-family:monospace;padding:20px;max-width:
             window._wcAddress = address;
             window._wcConnected = true;
             document.getElementById('connectBtn').textContent = address.slice(0,6)+'...'+address.slice(-4);
-            document.getElementById('connectBtn').style.background = '#00ff88';
-            document.getElementById('connectBtn').style.color = '#000';
+            document.getElementById('connectBtn').style.background = '#E0B65C';
+            document.getElementById('connectBtn').style.color = '#1A1428';
             window.dispatchEvent(new CustomEvent('walletConnected', { detail: { address } }));
           }
         }).catch(e => console.log('Connect error:',e));
@@ -68,24 +68,24 @@ body{background:#0a0a0a;color:#fff;font-family:monospace;padding:20px;max-width:
   <button class="connect-btn" id="connectBtn">Connect Wallet</button>
 </div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0;">
-  <div style="background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.15);border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+  <div style="background:rgba(224,182,92,0.05);border:1px solid rgba(224,182,92,0.15);border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
   <div>
-    <div style="color:#00ff88;font-size:11px;font-weight:600;letter-spacing:1px;">🔒 PRIVACY MODE</div>
-    <div style="color:#555;font-size:10px;margin-top:2px;">Powered by Arc Privacy Sector · Coming Soon</div>
+    <div style="color:#E0B65C;font-size:11px;font-weight:600;letter-spacing:1px;">🔒 PRIVACY MODE</div>
+    <div style="color:#8A86A8;font-size:10px;margin-top:2px;">Powered by Arc Privacy Sector · Coming Soon</div>
   </div>
   <label style="position:relative;display:inline-block;width:40px;height:22px;">
     <input type="checkbox" disabled style="opacity:0;width:0;height:0;" id="privacyToggle">
-    <span onclick="alert('Arc Privacy Sector integration coming soon. Payroll amounts and recipient addresses will be shielded inside the private EVM.')" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#1a1a1a;border:1px solid #333;border-radius:22px;transition:.3s;"></span>
+    <span onclick="alert('Arc Privacy Sector integration coming soon. Payroll amounts and recipient addresses will be shielded inside the private EVM.')" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#251F3D;border:1px solid #3D3558;border-radius:22px;transition:.3s;"></span>
   </label>
   </div>
-  <div style="background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.15);border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+  <div style="background:rgba(224,182,92,0.05);border:1px solid rgba(224,182,92,0.15);border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
     <div>
-      <div style="color:#00ff88;font-size:11px;font-weight:600;letter-spacing:1px;">⚡ GASLESS MODE</div>
-      <div style="color:#555;font-size:10px;margin-top:2px;">Circle Paymaster · Coming Soon</div>
+      <div style="color:#E0B65C;font-size:11px;font-weight:600;letter-spacing:1px;">⚡ GASLESS MODE</div>
+      <div style="color:#8A86A8;font-size:10px;margin-top:2px;">Circle Paymaster · Coming Soon</div>
     </div>
     <label style="position:relative;display:inline-block;width:40px;height:22px;">
       <input type="checkbox" disabled style="opacity:0;width:0;height:0;">
-      <span onclick="alert('Gasless Mode coming soon. Circle Paymaster will sponsor gas fees so creators transact with zero USDC cost.')" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#1a1a1a;border:1px solid #333;border-radius:22px;transition:.3s;"></span>
+      <span onclick="alert('Gasless Mode coming soon. Circle Paymaster will sponsor gas fees so creators transact with zero USDC cost.')" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#251F3D;border:1px solid #3D3558;border-radius:22px;transition:.3s;"></span>
     </label>
   </div>
 </div>
@@ -93,10 +93,10 @@ body{background:#0a0a0a;color:#fff;font-family:monospace;padding:20px;max-width:
   <div class="stat-card"><div class="stat-label">Pool Balance</div><div class="stat-value" id="poolBalance">—</div></div>
   <div class="stat-card"><div class="stat-label">Total Creators</div><div class="stat-value" id="totalCreators">—</div></div>
   <div class="stat-card"><div class="stat-label">Your Earnings</div><div class="stat-value" id="myEarnings">—</div></div>
-<div class="stat-card" style="grid-column:1/-1;background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.2);">
+<div class="stat-card" style="grid-column:1/-1;background:rgba(224,182,92,0.05);border:1px solid rgba(224,182,92,0.2);">
   <div class="stat-label">Circle Programmable Wallet</div>
-  <div style="font-size:12px;color:#00ff88;font-weight:700;margin-top:4px;">0x02d2...2415</div>
-  <div style="font-size:10px;color:#444;margin-top:2px;">Powered by Circle · Arc Testnet<br><button onclick="navigator.clipboard.writeText('0x02d29fb5e7e52598fbee698f11286b78b4562415').then(()=>this.textContent='Copied!').catch(()=>{})" style="margin-top:6px;font-size:11px;background:transparent;color:#00ff88;border:1px solid #00ff88;padding:2px 10px;border-radius:4px;cursor:pointer">Copy Address</button></div>
+  <div style="font-size:12px;color:#E0B65C;font-weight:700;margin-top:4px;">0x02d2...2415</div>
+  <div style="font-size:10px;color:#4A4368;margin-top:2px;">Powered by Circle · Arc Testnet<br><button onclick="navigator.clipboard.writeText('0x02d29fb5e7e52598fbee698f11286b78b4562415').then(()=>this.textContent='Copied!').catch(()=>{})" style="margin-top:6px;font-size:11px;background:transparent;color:#E0B65C;border:1px solid #E0B65C;padding:2px 10px;border-radius:4px;cursor:pointer">Copy Address</button></div>
 </div></div>
 <p class="tagline">Automated USDC payroll for creators — powered by Arc.</p>
 <div class="tabs">
@@ -115,14 +115,14 @@ body{background:#0a0a0a;color:#fff;font-family:monospace;padding:20px;max-width:
   <div class="card">
     <div class="card-title">Your Profile</div>
     <button class="btn-outline" onclick="loadProfile()">Load Profile</button>
-    <div id="profileData" style="margin-top:10px;font-size:13px;color:#aaa;"></div>
+    <div id="profileData" style="margin-top:10px;font-size:13px;color:#C9C6DC;"></div>
   </div>
 </div>
 <div class="panel" id="panel-admin">
   <div class="card">
     <div class="card-title">Fund Pool</div>
     <div class="field"><label>Source Chain</label>
-      <select id="fundChain" style="width:100%;background:#0a0a0a;border:1px solid #333;border-radius:6px;padding:10px;color:#fff;font-size:14px;">
+      <select id="fundChain" style="width:100%;background:#14101F;border:1px solid #3D3558;border-radius:6px;padding:10px;color:#F5F3FA;font-size:14px;">
         <option value="arc">Arc Testnet (direct)</option>
         <option value="base">Base Sepolia</option>
         <option value="arbitrum">Arbitrum Sepolia</option>
@@ -136,7 +136,7 @@ body{background:#0a0a0a;color:#fff;font-family:monospace;padding:20px;max-width:
   <div class="card">
     <div class="card-title">Registered Creators</div>
     <button class="btn-outline" onclick="loadCreatorList()" style="margin-bottom:8px;">Refresh List</button>
-    <div id="creatorList" style="font-size:12px;color:#aaa;">Click refresh to load</div>
+    <div id="creatorList" style="font-size:12px;color:#C9C6DC;">Click refresh to load</div>
   </div>
   <div class="card">
     <div class="card-title">Trigger Payout</div>
@@ -150,7 +150,7 @@ body{background:#0a0a0a;color:#fff;font-family:monospace;padding:20px;max-width:
   <div class="card">
     <div class="card-title">Recent Payouts</div>
     <button class="btn-outline" onclick="loadRecentPayouts()" style="margin-bottom:8px;">Load On-Chain Payouts</button>
-    <div id="recentPayouts" style="font-size:12px;color:#aaa;">Click to load recent payouts</div>
+    <div id="recentPayouts" style="font-size:12px;color:#C9C6DC;">Click to load recent payouts</div>
   </div>
   <div class="card">
     <div class="card-title">Activity Log</div>
@@ -161,52 +161,52 @@ body{background:#0a0a0a;color:#fff;font-family:monospace;padding:20px;max-width:
 <div class="panel" id="panel-info">
   <div class="card">
     <div class="card-title">🔒 Security</div>
-    <div style="font-size:12px;color:#aaa;line-height:1.8;">
+    <div style="font-size:12px;color:#C9C6DC;line-height:1.8;">
       <div style="margin-bottom:6px;">Contracts are open source and verifiable on ArcScan.</div>
-      <div><span style="color:#00ff88">Registry:</span> <a href="https://testnet.arcscan.app/address/0x0727cE415814C23E74B59D754C4020dB2E28651c" target="_blank" style="color:#555;font-size:11px;">0x0727...651c ↗</a></div>
-      <div><span style="color:#00ff88">Trigger:</span> <a href="https://testnet.arcscan.app/address/0xD4992Fbff51f3E75432569D7F1a808BD02bf0f04" target="_blank" style="color:#555;font-size:11px;">0xD499...f04 ↗</a></div>
-      <div style="margin-top:8px;padding:8px;background:#0a0a0a;border-radius:6px;border-left:2px solid #ff4466;">⚠️ Testnet only. Do not use real funds.</div>
+      <div><span style="color:#E0B65C">Registry:</span> <a href="https://testnet.arcscan.app/address/0x0727cE415814C23E74B59D754C4020dB2E28651c" target="_blank" style="color:#8A86A8;font-size:11px;">0x0727...651c ↗</a></div>
+      <div><span style="color:#E0B65C">Trigger:</span> <a href="https://testnet.arcscan.app/address/0xD4992Fbff51f3E75432569D7F1a808BD02bf0f04" target="_blank" style="color:#8A86A8;font-size:11px;">0xD499...f04 ↗</a></div>
+      <div style="margin-top:8px;padding:8px;background:#14101F;border-radius:6px;border-left:2px solid #F2768A;">⚠️ Testnet only. Do not use real funds.</div>
     </div>
   </div>
   <div class="card">
     <div class="card-title">❓ Help</div>
-    <div style="font-size:12px;color:#aaa;line-height:2;">
-      <div><span style="color:#00ff88">1.</span> Connect MetaMask (Arc Testnet)</div>
-      <div><span style="color:#00ff88">2.</span> Creator tab → register your handle</div>
-      <div><span style="color:#00ff88">3.</span> Admin funds the pool with USDC</div>
-      <div><span style="color:#00ff88">4.</span> Admin triggers payout by engagements</div>
-      <div><span style="color:#00ff88">5.</span> USDC lands in your wallet in 500ms</div>
-      <div style="margin-top:8px;padding:8px;background:#0a0a0a;border-radius:6px;">Need testnet USDC? <a href="https://faucet.circle.com" target="_blank" style="color:#00ff88;">Circle Faucet ↗</a></div>
+    <div style="font-size:12px;color:#C9C6DC;line-height:2;">
+      <div><span style="color:#E0B65C">1.</span> Connect MetaMask (Arc Testnet)</div>
+      <div><span style="color:#E0B65C">2.</span> Creator tab → register your handle</div>
+      <div><span style="color:#E0B65C">3.</span> Admin funds the pool with USDC</div>
+      <div><span style="color:#E0B65C">4.</span> Admin triggers payout by engagements</div>
+      <div><span style="color:#E0B65C">5.</span> USDC lands in your wallet in 500ms</div>
+      <div style="margin-top:8px;padding:8px;background:#14101F;border-radius:6px;">Need testnet USDC? <a href="https://faucet.circle.com" target="_blank" style="color:#E0B65C;">Circle Faucet ↗</a></div>
     </div>
   </div>
   <div class="card">
     <div class="card-title">🛡️ Privacy</div>
-    <div style="font-size:12px;color:#aaa;line-height:1.8;">
+    <div style="font-size:12px;color:#C9C6DC;line-height:1.8;">
       <div style="margin-bottom:6px;">No personal data collected. All transactions are public on Arc Testnet. Your wallet address is the only identifier.</div>
-      <div style="padding:8px;background:#0a0a0a;border-radius:6px;border-left:2px solid #00ff88;">🔒 <strong style="color:#00ff88">Coming Soon:</strong> Arc Privacy Sector will shield payroll amounts inside the private EVM.</div>
+      <div style="padding:8px;background:#14101F;border-radius:6px;border-left:2px solid #E0B65C;">🔒 <strong style="color:#E0B65C">Coming Soon:</strong> Arc Privacy Sector will shield payroll amounts inside the private EVM.</div>
     </div>
   </div>
   <div class="card">
     <div class="card-title">📜 About</div>
-    <div style="font-size:12px;color:#aaa;line-height:1.8;">
+    <div style="font-size:12px;color:#C9C6DC;line-height:1.8;">
       <div style="margin-bottom:6px;">CreatorPay is an autonomous USDC payroll agent for content creators, built on Arc Testnet and powered by Circle.</div>
       <div style="margin-bottom:6px;">Creators register onchain. Admins fund a pool and trigger payouts by engagement. USDC settles in under 500ms.</div>
-      <div style="color:#555;font-size:11px;">Built by <a href="https://x.com/kibrahimD70212" target="_blank" style="color:#00ff88;">@kibrahimD70212</a> · Ignyte Stablecoins Commerce Stack Challenge</div>
+      <div style="color:#8A86A8;font-size:11px;">Built by <a href="https://x.com/kibrahimD70212" target="_blank" style="color:#E0B65C;">@kibrahimD70212</a> · Ignyte Stablecoins Commerce Stack Challenge</div>
     </div>
   </div>
   <div class="card">
     <div class="card-title">🔗 Links</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;">
-      <a href="https://testnet.arcscan.app" target="_blank" style="padding:8px;background:#0a0a0a;border:1px solid #222;border-radius:6px;color:#00ff88;text-decoration:none;text-align:center;font-size:12px;">ArcScan ↗</a>
-      <a href="https://github.com/mohammedkibrahim3419-hub/creatorpay-agent" target="_blank" style="padding:8px;background:#0a0a0a;border:1px solid #222;border-radius:6px;color:#00ff88;text-decoration:none;text-align:center;font-size:12px;">GitHub ↗</a>
-      <a href="https://faucet.circle.com" target="_blank" style="padding:8px;background:#0a0a0a;border:1px solid #222;border-radius:6px;color:#00ff88;text-decoration:none;text-align:center;font-size:12px;">Faucet ↗</a>
-      <a href="https://developers.circle.com" target="_blank" style="padding:8px;background:#0a0a0a;border:1px solid #222;border-radius:6px;color:#00ff88;text-decoration:none;text-align:center;font-size:12px;">Circle Docs ↗</a>
-      <a href="https://arc.io" target="_blank" style="padding:8px;background:#0a0a0a;border:1px solid #222;border-radius:6px;color:#00ff88;text-decoration:none;text-align:center;font-size:12px;">Arc.io ↗</a>
-      <a href="https://x.com/kibrahimD70212" target="_blank" style="padding:8px;background:#0a0a0a;border:1px solid #222;border-radius:6px;color:#00ff88;text-decoration:none;text-align:center;font-size:12px;">Twitter ↗</a>
+      <a href="https://testnet.arcscan.app" target="_blank" style="padding:8px;background:#14101F;border:1px solid #322B4A;border-radius:6px;color:#E0B65C;text-decoration:none;text-align:center;font-size:12px;">ArcScan ↗</a>
+      <a href="https://github.com/mohammedkibrahim3419-hub/creatorpay-agent" target="_blank" style="padding:8px;background:#14101F;border:1px solid #322B4A;border-radius:6px;color:#E0B65C;text-decoration:none;text-align:center;font-size:12px;">GitHub ↗</a>
+      <a href="https://faucet.circle.com" target="_blank" style="padding:8px;background:#14101F;border:1px solid #322B4A;border-radius:6px;color:#E0B65C;text-decoration:none;text-align:center;font-size:12px;">Faucet ↗</a>
+      <a href="https://developers.circle.com" target="_blank" style="padding:8px;background:#14101F;border:1px solid #322B4A;border-radius:6px;color:#E0B65C;text-decoration:none;text-align:center;font-size:12px;">Circle Docs ↗</a>
+      <a href="https://arc.io" target="_blank" style="padding:8px;background:#14101F;border:1px solid #322B4A;border-radius:6px;color:#E0B65C;text-decoration:none;text-align:center;font-size:12px;">Arc.io ↗</a>
+      <a href="https://x.com/kibrahimD70212" target="_blank" style="padding:8px;background:#14101F;border:1px solid #322B4A;border-radius:6px;color:#E0B65C;text-decoration:none;text-align:center;font-size:12px;">Twitter ↗</a>
     </div>
   </div>
 </div>
-<div style="margin-top:16px;font-size:11px;color:#333;text-align:center;">
+<div style="margin-top:16px;font-size:11px;color:#3D3558;text-align:center;">
   Registry: 0x0727...651c &nbsp;|&nbsp; Trigger: 0xD499...f04
 </div>
 <script>
@@ -336,8 +336,8 @@ window.addEventListener('walletConnected', async function(e){
   tryConnect(4);
   const btn = document.getElementById('connectBtn');
   btn.textContent = address.slice(0,6)+'...'+address.slice(-4);
-  btn.style.background = '#00ff88';
-  btn.style.color = '#000';
+  btn.style.background = '#E0B65C';
+  btn.style.color = '#1A1428';
 });
 document.getElementById('connectBtn').onclick=function(){
 if(window.appKitModal){ window.appKitModal.open(); return; }if(window._modal){window._modal.open();return;}
@@ -348,8 +348,8 @@ if(window.appKitModal){ window.appKitModal.open(); return; }if(window._modal){wi
       signer=s;
       userAddress=accs[0];
       document.getElementById('connectBtn').textContent=userAddress.slice(0,6)+'...'+userAddress.slice(-4);
-      document.getElementById('connectBtn').style.background='#00ff88';
-      document.getElementById('connectBtn').style.color='#000';
+      document.getElementById('connectBtn').style.background='#E0B65C';
+      document.getElementById('connectBtn').style.color='#1A1428';
       log('Wallet connected: '+userAddress,'success');
       loadStats();
     });
@@ -370,12 +370,12 @@ async function loadRecentPayouts(){
       const addr = ev.args[0];
       const amt = ethers.formatUnits(ev.args[1], 6);
       const eng = ev.args[2].toString();
-      html += `<div style="padding:6px 0;border-bottom:1px solid #222;">
+      html += `<div style="padding:6px 0;border-bottom:1px solid #322B4A;">
         <div style="display:flex;justify-content:space-between;">
-          <span style="color:#00ff88">${addr.slice(0,6)}...${addr.slice(-4)}</span>
+          <span style="color:#E0B65C">${addr.slice(0,6)}...${addr.slice(-4)}</span>
           <span>${amt} USDC</span>
         </div>
-        <div style="color:#555;font-size:11px">${eng} engagements · <a href="https://testnet.arcscan.app/tx/${ev.transactionHash}" target="_blank" style="color:#555">view tx ↗</a></div>
+        <div style="color:#8A86A8;font-size:11px">${eng} engagements · <a href="https://testnet.arcscan.app/tx/${ev.transactionHash}" target="_blank" style="color:#8A86A8">view tx ↗</a></div>
       </div>`;
     }
     el.innerHTML = html;
@@ -398,10 +398,10 @@ async function loadCreatorList(){
     for(const addr of Object.keys(seen)){
       const c = await reg.getCreator(addr);
       if(!c.isRegistered) continue;
-      html += `<div style="padding:6px 0;border-bottom:1px solid #222;display:flex;justify-content:space-between;align-items:center;">
-        <div><div style="color:#00ff88">${c.contentId}</div><div style="color:#555;font-size:11px">${addr.slice(0,6)}...${addr.slice(-4)}</div></div>
+      html += `<div style="padding:6px 0;border-bottom:1px solid #322B4A;display:flex;justify-content:space-between;align-items:center;">
+        <div><div style="color:#E0B65C">${c.contentId}</div><div style="color:#8A86A8;font-size:11px">${addr.slice(0,6)}...${addr.slice(-4)}</div></div>
         <div style="text-align:right"><div>${ethers.formatUnits(c.totalEarned,6)} USDC</div>
-        <button onclick="document.getElementById('payoutCreator').value='${addr}'" style="font-size:10px;background:#1a1a1a;color:#00ff88;border:1px solid #00ff88;padding:2px 6px;border-radius:4px;cursor:pointer">Select</button></div>
+        <button onclick="document.getElementById('payoutCreator').value='${addr}'" style="font-size:10px;background:#251F3D;color:#E0B65C;border:1px solid #E0B65C;padding:2px 6px;border-radius:4px;cursor:pointer">Select</button></div>
       </div>`;
     }
     el.innerHTML = html || 'No active creators.';
@@ -433,7 +433,7 @@ async function registerCreator(){
     const reg=new ethers.Contract(REGISTRY_ADDRESS,REGISTRY_ABI,signer);
     const tx=await reg.register(cid);
     await tx.wait();
-    setStatus('registerStatus','Registered! <a href="https://testnet.arcscan.app/tx/'+tx.hash+'" target="_blank" style="color:#00ff88">View on ArcScan ↗</a>','success');
+    setStatus('registerStatus','Registered! <a href="https://testnet.arcscan.app/tx/'+tx.hash+'" target="_blank" style="color:#E0B65C">View on ArcScan ↗</a>','success');
     log('Creator registered: '+cid,'success');
     await loadStats();
   }catch(e){setStatus('registerStatus','Error: '+e.message,'error');}
@@ -445,7 +445,7 @@ async function loadProfile(){
     const rp=new ethers.JsonRpcProvider('https://rpc.testnet.arc.network');
     const reg=new ethers.Contract(REGISTRY_ADDRESS,REGISTRY_ABI,rp);
     const isReg=await reg.isRegistered(userAddress);
-    if(!isReg){ document.getElementById('profileData').innerHTML='<span style="color:#ff4466">Not registered yet. Enter your handle above and click Register.</span>'; return; }
+    if(!isReg){ document.getElementById('profileData').innerHTML='<span style="color:#F2768A">Not registered yet. Enter your handle above and click Register.</span>'; return; }
     const c=await reg.getCreator(userAddress);
     document.getElementById('profileData').innerHTML='Handle: '+c.contentId+'<br>Earned: '+ethers.formatUnits(c.totalEarned,6)+' USDC';
   }catch(e){document.getElementById('profileData').textContent='Error: '+e.message;}
@@ -462,7 +462,7 @@ async function fundPool(){
       const trig=new ethers.Contract(TRIGGER_ADDRESS,TRIGGER_ABI,signer);
       const tx=await trig.fundPool(ethers.parseUnits(amt,6));
       await tx.wait();
-      setStatus('fundStatus','Funded '+amt+' USDC! <a href="https://testnet.arcscan.app/tx/'+tx.hash+'" target="_blank" style="color:#00ff88">View on ArcScan ↗</a>','success');
+      setStatus('fundStatus','Funded '+amt+' USDC! <a href="https://testnet.arcscan.app/tx/'+tx.hash+'" target="_blank" style="color:#E0B65C">View on ArcScan ↗</a>','success');
       log('Pool funded: '+amt+' USDC on Arc','success');
     } else {
       const addr=await signer.getAddress();
@@ -475,7 +475,7 @@ async function fundPool(){
         setStatus('fundStatus','Route found via LiFi! Confirm in wallet...','loading');
         const tx=await signer.sendTransaction(routeData.transactionRequest);
         await tx.wait();
-        setStatus('fundStatus','Cross-chain deposit confirmed via LiFi! <a href="https://testnet.arcscan.app/tx/'+tx.hash+'" target="_blank" style="color:#00ff88">View on ArcScan ↗</a>','success');
+        setStatus('fundStatus','Cross-chain deposit confirmed via LiFi! <a href="https://testnet.arcscan.app/tx/'+tx.hash+'" target="_blank" style="color:#E0B65C">View on ArcScan ↗</a>','success');
         log('LiFi cross-chain: '+amt+' USDC from '+chain+' → Arc','success');
       } else {
         setStatus('fundStatus','No route found. Try Arc Testnet direct.','error');
@@ -495,7 +495,7 @@ async function triggerPayout(){
     const trig=new ethers.Contract(TRIGGER_ADDRESS,TRIGGER_ABI,signer);
     const tx=await trig.triggerPayout(cr,eng);
     await tx.wait();
-    setStatus('payoutStatus','Payout confirmed! <a href="https://testnet.arcscan.app/tx/'+tx.hash+'" target="_blank" style="color:#00ff88">View on ArcScan ↗</a>','success');
+    setStatus('payoutStatus','Payout confirmed! <a href="https://testnet.arcscan.app/tx/'+tx.hash+'" target="_blank" style="color:#E0B65C">View on ArcScan ↗</a>','success');
     log('Payout confirmed for '+cr,'success');
     await loadStats();
   }catch(e){setStatus('payoutStatus','Error: '+e.message,'error');}
