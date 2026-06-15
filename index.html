@@ -161,6 +161,7 @@ body{background:#14101F;color:#F5F3FA;font-family:monospace;padding:20px;max-wid
 <div class="panel" id="panel-info">
   <div class="card">
     <div class="card-title">🔒 Security</div>
+    <button class="btn-outline" onclick="if(confirm('Reset Admin PIN/biometric? You will need to set a new one on next Admin access.')){localStorage.removeItem('cp_admin_pin');localStorage.removeItem('cp_biometric_cred');window._biometricUnlocked=false;alert('Reset complete.');}" style="margin-bottom:10px;">Reset Admin PIN</button>
     <div style="font-size:12px;color:#C9C6DC;line-height:1.8;">
       <div style="margin-bottom:6px;">Contracts are open source and verifiable on ArcScan.</div>
       <div><span style="color:#E0B65C">Registry:</span> <a href="https://testnet.arcscan.app/address/0x0727cE415814C23E74B59D754C4020dB2E28651c" target="_blank" style="color:#8A86A8;font-size:11px;">0x0727...651c ↗</a></div>
