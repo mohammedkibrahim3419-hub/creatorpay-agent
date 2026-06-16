@@ -5,35 +5,44 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CreatorPay Agent</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:#14101F;color:#F5F3FA;font-family:monospace;padding:20px;max-width:480px;margin:0 auto;}
+body{background:radial-gradient(circle at top right,#2A2147 0%,#14101F 45%,#0F0B18 100%);color:#F5F3FA;font-family:'Inter',sans-serif;padding:20px;max-width:480px;margin:0 auto;min-height:100vh;line-height:1.5;}
 .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
-.logo{font-size:22px;font-weight:900;}
-.logo span{color:#E0B65C;}
-.btn{background:#E0B65C;color:#1A1428;border:none;padding:12px 20px;border-radius:8px;font-weight:700;font-size:14px;width:100%;margin-top:8px;cursor:pointer;}
-.btn-outline{background:transparent;color:#E0B65C;border:2px solid #E0B65C;padding:10px 20px;border-radius:8px;font-weight:700;font-size:14px;width:100%;margin-top:8px;cursor:pointer;}
-.connect-btn{background:transparent;color:#E0B65C;border:2px solid #E0B65C;padding:8px 16px;border-radius:8px;font-weight:700;cursor:pointer;}
+.logo{font-size:26px;font-weight:700;font-family:'Playfair Display',serif;letter-spacing:0.5px;}
+.logo span{background:linear-gradient(135deg,#E0B65C 0%,#C9A8FF 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;font-style:italic;}
+.btn{background:linear-gradient(135deg,#E0B65C 0%,#C9A8FF 100%);color:#1A1428;border:none;padding:14px 20px;border-radius:20px;font-weight:700;font-size:14px;width:100%;margin-top:8px;cursor:pointer;box-shadow:0 4px 16px rgba(224,182,92,0.25);letter-spacing:0.3px;}
+.btn-outline{background:transparent;color:#E0B65C;border:2px solid #E0B65C;padding:10px 20px;border-radius:20px;font-weight:700;font-size:14px;width:100%;margin-top:8px;cursor:pointer;}
+.connect-btn{background:transparent;color:#E0B65C;border:2px solid #E0B65C;padding:8px 16px;border-radius:20px;font-weight:700;cursor:pointer;}
 .stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px;}
-.stat-card{background:#1E1830;border:1px solid #322B4A;border-radius:10px;padding:14px;text-align:center;}
+.stat-card{background:#1E1830;border:1px solid #322B4A;border-radius:18px;padding:14px;text-align:center;box-shadow:0 6px 16px -6px rgba(0,0,0,0.4);}
 .stat-label{font-size:10px;color:#9D99BD;margin-bottom:6px;text-transform:uppercase;}
 .stat-value{font-size:18px;font-weight:900;color:#E0B65C;}
 .tagline{text-align:center;color:#C9C6DC;font-size:13px;margin-bottom:16px;}
 .tabs{display:flex;gap:8px;margin-bottom:16px;}
-.tab{flex:1;padding:10px;text-align:center;background:#1E1830;border:1px solid #322B4A;border-radius:8px;cursor:pointer;font-size:13px;color:#C9C6DC;user-select:none;}
-.tab.active{background:#E0B65C;color:#1A1428;font-weight:700;border-color:#E0B65C;}
+.tab{flex:1;padding:10px;text-align:center;background:#1E1830;border:1px solid #322B4A;border-radius:20px;cursor:pointer;font-size:13px;color:#C9C6DC;user-select:none;}
+.tab.active{background:linear-gradient(135deg,#E0B65C 0%,#C9A8FF 100%);color:#1A1428;font-weight:700;border-color:transparent;box-shadow:0 2px 10px rgba(224,182,92,0.2);}
 .panel{display:none;}
 .panel.active{display:block;}
-.card{background:#1E1830;border:1px solid #322B4A;border-radius:12px;padding:16px;margin-bottom:12px;}
+.card{background:#1E1830;border:1px solid #322B4A;border-radius:20px;padding:16px;margin-bottom:12px;box-shadow:0 8px 24px -8px rgba(0,0,0,0.5),0 0 0 1px rgba(224,182,92,0.04);}
 .card-title{font-size:12px;font-weight:700;color:#E0B65C;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;}
 .field{margin-bottom:10px;}
 .field label{font-size:11px;color:#9D99BD;display:block;margin-bottom:4px;text-transform:uppercase;}
-.field input{width:100%;background:#14101F;border:1px solid #3D3558;border-radius:6px;padding:10px;color:#F5F3FA;font-size:14px;font-family:monospace;}
-.status{display:none;padding:8px;border-radius:6px;font-size:12px;margin-top:8px;}
+.field input{width:100%;background:#14101F;border:1px solid #3D3558;border-radius:18px;padding:10px;color:#F5F3FA;font-size:14px;font-family:monospace;}
+.status{display:none;padding:8px;border-radius:18px;font-size:12px;margin-top:8px;}
 .status.success{display:block;background:rgba(224,182,92,0.1);border:1px solid rgba(224,182,92,0.3);color:#E0B65C;}
 .status.error{display:block;background:rgba(242,118,138,0.1);border:1px solid rgba(242,118,138,0.3);color:#F2768A;}
 .status.loading{display:block;background:rgba(201,168,255,0.1);border:1px solid rgba(201,168,255,0.3);color:#C9A8FF;}
-.log{background:#14101F;border:1px solid #322B4A;border-radius:8px;padding:12px;height:200px;overflow-y:auto;font-size:12px;}
+.log{background:#14101F;border:1px solid #322B4A;border-radius:20px;padding:12px;height:200px;overflow-y:auto;font-size:12px;}
 .log-entry{padding:2px 0;color:#C9C6DC;}
 .log-entry.success{color:#E0B65C;}
 .log-entry.error{color:#F2768A;}
@@ -68,7 +77,7 @@ body{background:#14101F;color:#F5F3FA;font-family:monospace;padding:20px;max-wid
   <button class="connect-btn" id="connectBtn">Connect Wallet</button>
 </div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0;">
-  <div style="background:rgba(224,182,92,0.05);border:1px solid rgba(224,182,92,0.15);border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+  <div style="background:rgba(224,182,92,0.05);border:1px solid rgba(224,182,92,0.15);border-radius:18px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
   <div>
     <div style="color:#E0B65C;font-size:11px;font-weight:600;letter-spacing:1px;">🔒 PRIVACY MODE</div>
     <div style="color:#8A86A8;font-size:10px;margin-top:2px;">Powered by Arc Privacy Sector · Coming Soon</div>
@@ -78,7 +87,7 @@ body{background:#14101F;color:#F5F3FA;font-family:monospace;padding:20px;max-wid
     <span onclick="alert('Arc Privacy Sector integration coming soon. Payroll amounts and recipient addresses will be shielded inside the private EVM.')" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#251F3D;border:1px solid #3D3558;border-radius:22px;transition:.3s;"></span>
   </label>
   </div>
-  <div style="background:rgba(224,182,92,0.05);border:1px solid rgba(224,182,92,0.15);border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+  <div style="background:rgba(224,182,92,0.05);border:1px solid rgba(224,182,92,0.15);border-radius:18px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
     <div>
       <div style="color:#E0B65C;font-size:11px;font-weight:600;letter-spacing:1px;">⚡ GASLESS MODE</div>
       <div style="color:#8A86A8;font-size:10px;margin-top:2px;">Circle Paymaster · Coming Soon</div>
@@ -96,7 +105,7 @@ body{background:#14101F;color:#F5F3FA;font-family:monospace;padding:20px;max-wid
 <div class="stat-card" style="grid-column:1/-1;background:rgba(224,182,92,0.05);border:1px solid rgba(224,182,92,0.2);">
   <div class="stat-label">Circle Programmable Wallet</div>
   <div style="font-size:12px;color:#E0B65C;font-weight:700;margin-top:4px;">0x02d2...2415</div>
-  <div style="font-size:10px;color:#4A4368;margin-top:2px;">Powered by Circle · Arc Testnet<br><button onclick="navigator.clipboard.writeText('0x02d29fb5e7e52598fbee698f11286b78b4562415').then(()=>this.textContent='Copied!').catch(()=>{})" style="margin-top:6px;font-size:11px;background:transparent;color:#E0B65C;border:1px solid #E0B65C;padding:2px 10px;border-radius:4px;cursor:pointer">Copy Address</button></div>
+  <div style="font-size:10px;color:#4A4368;margin-top:2px;">Powered by Circle · Arc Testnet<br><button onclick="navigator.clipboard.writeText('0x02d29fb5e7e52598fbee698f11286b78b4562415').then(()=>this.textContent='Copied!').catch(()=>{})" style="margin-top:6px;font-size:11px;background:transparent;color:#E0B65C;border:1px solid #E0B65C;padding:2px 10px;border-radius:16px;cursor:pointer">Copy Address</button></div>
 </div></div>
 <p class="tagline">Automated USDC payroll for creators — powered by Arc.</p>
 <div class="tabs">
@@ -122,7 +131,7 @@ body{background:#14101F;color:#F5F3FA;font-family:monospace;padding:20px;max-wid
   <div class="card">
     <div class="card-title">Fund Pool</div>
     <div class="field"><label>Source Chain</label>
-      <select id="fundChain" style="width:100%;background:#14101F;border:1px solid #3D3558;border-radius:6px;padding:10px;color:#F5F3FA;font-size:14px;">
+      <select id="fundChain" style="width:100%;background:#14101F;border:1px solid #3D3558;border-radius:18px;padding:10px;color:#F5F3FA;font-size:14px;">
         <option value="arc">Arc Testnet (direct)</option>
         <option value="base">Base Sepolia</option>
         <option value="arbitrum">Arbitrum Sepolia</option>
@@ -167,7 +176,7 @@ body{background:#14101F;color:#F5F3FA;font-family:monospace;padding:20px;max-wid
       <div style="margin-bottom:6px;">Contracts are open source and verifiable on ArcScan.</div>
       <div><span style="color:#E0B65C">Registry:</span> <a href="https://testnet.arcscan.app/address/0x0727cE415814C23E74B59D754C4020dB2E28651c" target="_blank" style="color:#8A86A8;font-size:11px;">0x0727...651c ↗</a></div>
       <div><span style="color:#E0B65C">Trigger:</span> <a href="https://testnet.arcscan.app/address/0xD4992Fbff51f3E75432569D7F1a808BD02bf0f04" target="_blank" style="color:#8A86A8;font-size:11px;">0xD499...f04 ↗</a></div>
-      <div style="margin-top:8px;padding:8px;background:#14101F;border-radius:6px;border-left:2px solid #F2768A;">⚠️ Testnet only. Do not use real funds.</div>
+      <div style="margin-top:8px;padding:8px;background:#14101F;border-radius:18px;border-left:2px solid #F2768A;">⚠️ Testnet only. Do not use real funds.</div>
     </div>
   </div>
   <div class="card">
@@ -178,14 +187,14 @@ body{background:#14101F;color:#F5F3FA;font-family:monospace;padding:20px;max-wid
       <div><span style="color:#E0B65C">3.</span> Admin funds the pool with USDC</div>
       <div><span style="color:#E0B65C">4.</span> Admin triggers payout by engagements</div>
       <div><span style="color:#E0B65C">5.</span> USDC lands in your wallet in 500ms</div>
-      <div style="margin-top:8px;padding:8px;background:#14101F;border-radius:6px;">Need testnet USDC? <a href="https://faucet.circle.com" target="_blank" style="color:#E0B65C;">Circle Faucet ↗</a></div>
+      <div style="margin-top:8px;padding:8px;background:#14101F;border-radius:18px;">Need testnet USDC? <a href="https://faucet.circle.com" target="_blank" style="color:#E0B65C;">Circle Faucet ↗</a></div>
     </div>
   </div>
   <div class="card">
     <div class="card-title">🛡️ Privacy</div>
     <div style="font-size:12px;color:#C9C6DC;line-height:1.8;">
       <div style="margin-bottom:6px;">No personal data collected. All transactions are public on Arc Testnet. Your wallet address is the only identifier.</div>
-      <div style="padding:8px;background:#14101F;border-radius:6px;border-left:2px solid #E0B65C;">🔒 <strong style="color:#E0B65C">Coming Soon:</strong> Arc Privacy Sector will shield payroll amounts inside the private EVM.</div>
+      <div style="padding:8px;background:#14101F;border-radius:18px;border-left:2px solid #E0B65C;">🔒 <strong style="color:#E0B65C">Coming Soon:</strong> Arc Privacy Sector will shield payroll amounts inside the private EVM.</div>
     </div>
   </div>
   <div class="card">
@@ -199,12 +208,12 @@ body{background:#14101F;color:#F5F3FA;font-family:monospace;padding:20px;max-wid
   <div class="card">
     <div class="card-title">🔗 Links</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;">
-      <a href="https://testnet.arcscan.app" target="_blank" style="padding:8px;background:#14101F;border:1px solid #322B4A;border-radius:6px;color:#E0B65C;text-decoration:none;text-align:center;font-size:12px;">ArcScan ↗</a>
-      <a href="https://github.com/mohammedkibrahim3419-hub/creatorpay-agent" target="_blank" style="padding:8px;background:#14101F;border:1px solid #322B4A;border-radius:6px;color:#E0B65C;text-decoration:none;text-align:center;font-size:12px;">GitHub ↗</a>
-      <a href="https://faucet.circle.com" target="_blank" style="padding:8px;background:#14101F;border:1px solid #322B4A;border-radius:6px;color:#E0B65C;text-decoration:none;text-align:center;font-size:12px;">Faucet ↗</a>
-      <a href="https://developers.circle.com" target="_blank" style="padding:8px;background:#14101F;border:1px solid #322B4A;border-radius:6px;color:#E0B65C;text-decoration:none;text-align:center;font-size:12px;">Circle Docs ↗</a>
-      <a href="https://arc.io" target="_blank" style="padding:8px;background:#14101F;border:1px solid #322B4A;border-radius:6px;color:#E0B65C;text-decoration:none;text-align:center;font-size:12px;">Arc.io ↗</a>
-      <a href="https://x.com/kibrahimD70212" target="_blank" style="padding:8px;background:#14101F;border:1px solid #322B4A;border-radius:6px;color:#E0B65C;text-decoration:none;text-align:center;font-size:12px;">Twitter ↗</a>
+      <a href="https://testnet.arcscan.app" target="_blank" style="padding:8px;background:#14101F;border:1px solid #322B4A;border-radius:18px;color:#E0B65C;text-decoration:none;text-align:center;font-size:12px;">ArcScan ↗</a>
+      <a href="https://github.com/mohammedkibrahim3419-hub/creatorpay-agent" target="_blank" style="padding:8px;background:#14101F;border:1px solid #322B4A;border-radius:18px;color:#E0B65C;text-decoration:none;text-align:center;font-size:12px;">GitHub ↗</a>
+      <a href="https://faucet.circle.com" target="_blank" style="padding:8px;background:#14101F;border:1px solid #322B4A;border-radius:18px;color:#E0B65C;text-decoration:none;text-align:center;font-size:12px;">Faucet ↗</a>
+      <a href="https://developers.circle.com" target="_blank" style="padding:8px;background:#14101F;border:1px solid #322B4A;border-radius:18px;color:#E0B65C;text-decoration:none;text-align:center;font-size:12px;">Circle Docs ↗</a>
+      <a href="https://arc.io" target="_blank" style="padding:8px;background:#14101F;border:1px solid #322B4A;border-radius:18px;color:#E0B65C;text-decoration:none;text-align:center;font-size:12px;">Arc.io ↗</a>
+      <a href="https://x.com/kibrahimD70212" target="_blank" style="padding:8px;background:#14101F;border:1px solid #322B4A;border-radius:18px;color:#E0B65C;text-decoration:none;text-align:center;font-size:12px;">Twitter ↗</a>
     </div>
   </div>
 </div>
@@ -414,7 +423,7 @@ async function loadCreatorList(){
       html += `<div style="padding:6px 0;border-bottom:1px solid #322B4A;display:flex;justify-content:space-between;align-items:center;">
         <div><div style="color:#E0B65C">${c.contentId}</div><div style="color:#8A86A8;font-size:11px">${addr.slice(0,6)}...${addr.slice(-4)}</div></div>
         <div style="text-align:right"><div>${ethers.formatUnits(c.totalEarned,6)} USDC</div>
-        <button onclick="document.getElementById('payoutCreator').value='${addr}'" style="font-size:10px;background:#251F3D;color:#E0B65C;border:1px solid #E0B65C;padding:2px 6px;border-radius:4px;cursor:pointer">Select</button></div>
+        <button onclick="document.getElementById('payoutCreator').value='${addr}'" style="font-size:10px;background:#251F3D;color:#E0B65C;border:1px solid #E0B65C;padding:2px 6px;border-radius:16px;cursor:pointer">Select</button></div>
       </div>`;
     }
     el.innerHTML = html || 'No active creators.';
