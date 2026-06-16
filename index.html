@@ -46,6 +46,18 @@ body{background:radial-gradient(circle at top right,#2A2147 0%,#14101F 45%,#0F0B
 .log-entry{padding:2px 0;color:#C9C6DC;}
 .log-entry.success{color:#E0B65C;}
 .log-entry.error{color:#F2768A;}
+.pin-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,11,24,0.85);backdrop-filter:blur(8px);z-index:9999;align-items:center;justify-content:center;}
+.pin-card{background:#1E1830;border:1px solid #322B4A;border-radius:24px;padding:28px 24px;width:90%;max-width:340px;text-align:center;box-shadow:0 20px 60px -10px rgba(0,0,0,0.6),0 0 0 1px rgba(224,182,92,0.08);}
+.pin-title{font-family:'Playfair Display',serif;font-size:20px;color:#F5F3FA;margin-bottom:4px;}
+.pin-subtitle{font-size:12px;color:#9D99BD;margin-bottom:22px;}
+.pin-dots{display:flex;justify-content:center;gap:14px;margin-bottom:28px;}
+.pin-dot{width:14px;height:14px;border-radius:50%;border:1.5px solid #4A4368;transition:all .15s;}
+.pin-dot.filled{background:linear-gradient(135deg,#E0B65C 0%,#C9A8FF 100%);border-color:transparent;box-shadow:0 0 10px rgba(224,182,92,0.5);}
+.pin-keypad{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:18px;}
+.pin-key{background:#251F3D;border:1px solid #322B4A;border-radius:50%;aspect-ratio:1;font-size:20px;font-weight:600;color:#F5F3FA;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;transition:all .1s;}
+.pin-key:active{background:#322B4A;transform:scale(0.94);}
+.pin-key.ghost{background:transparent;border:none;}
+.pin-cancel{margin-top:6px;background:transparent;border:none;color:#8A86A8;font-size:13px;cursor:pointer;text-decoration:underline;}
 </style>
 <script>
   window._initAppKit = function() {
@@ -72,6 +84,28 @@ body{background:radial-gradient(circle at top right,#2A2147 0%,#14101F 45%,#0F0B
 </script>
 </head>
 <body>
+<div class="pin-overlay" id="pinOverlay">
+  <div class="pin-card">
+    <div class="pin-title" id="pinTitle">Enter PIN</div>
+    <div class="pin-subtitle" id="pinSubtitle"></div>
+    <div class="pin-dots" id="pinDots"></div>
+    <div class="pin-keypad">
+      <div class="pin-key" onclick="pinKeyPress('1')">1</div>
+      <div class="pin-key" onclick="pinKeyPress('2')">2</div>
+      <div class="pin-key" onclick="pinKeyPress('3')">3</div>
+      <div class="pin-key" onclick="pinKeyPress('4')">4</div>
+      <div class="pin-key" onclick="pinKeyPress('5')">5</div>
+      <div class="pin-key" onclick="pinKeyPress('6')">6</div>
+      <div class="pin-key" onclick="pinKeyPress('7')">7</div>
+      <div class="pin-key" onclick="pinKeyPress('8')">8</div>
+      <div class="pin-key" onclick="pinKeyPress('9')">9</div>
+      <div class="pin-key ghost"></div>
+      <div class="pin-key" onclick="pinKeyPress('0')">0</div>
+      <div class="pin-key" onclick="pinBackspace()">⌫</div>
+    </div>
+    <button class="pin-cancel" onclick="cancelPinModal()">Cancel</button>
+  </div>
+</div>
 <div class="header">
   <div class="logo">Creator<span>Pay</span></div>
   <button class="connect-btn" id="connectBtn">Connect Wallet</button>
@@ -258,7 +292,7 @@ async function hashPin(pin){
 async function changePin(){
   const stored = localStorage.getItem('cp_admin_pin');
   if(!stored){ alert('No PIN set yet. Open Admin tab first to set one.'); return; }
-  const current = prompt('Enter current PIN:');
+  const current = await showPinModal('Current PIN', 'Enter your current PIN');
   if(!current) return;
   const hash = await hashPin(current);
   if(hash !== stored){ alert('Incorrect PIN.'); return; }
@@ -266,10 +300,64 @@ async function changePin(){
   if(ok) alert('PIN changed successfully.');
 }
 
+let _pinResolve = null;
+let _pinBuffer = '';
+const _pinLength = 6;
+
+function showPinModal(title, subtitle){
+  return new Promise(resolve => {
+    _pinResolve = resolve;
+    _pinBuffer = '';
+    document.getElementById('pinTitle').textContent = title;
+    document.getElementById('pinSubtitle').textContent = subtitle || '';
+    updatePinDots();
+    document.getElementById('pinOverlay').style.display = 'flex';
+  });
+}
+
+function pinKeyPress(digit){
+  if(_pinBuffer.length >= _pinLength) return;
+  _pinBuffer += digit;
+  updatePinDots();
+  if(_pinBuffer.length === _pinLength){
+    setTimeout(()=>{
+      const val = _pinBuffer;
+      closePinModal();
+      if(_pinResolve){ const r=_pinResolve; _pinResolve=null; r(val); }
+    }, 180);
+  }
+}
+
+function pinBackspace(){
+  _pinBuffer = _pinBuffer.slice(0,-1);
+  updatePinDots();
+}
+
+function updatePinDots(){
+  const dotsEl = document.getElementById('pinDots');
+  dotsEl.innerHTML = '';
+  for(let i=0;i<_pinLength;i++){
+    const d = document.createElement('div');
+    d.className = 'pin-dot' + (i < _pinBuffer.length ? ' filled' : '');
+    dotsEl.appendChild(d);
+  }
+}
+
+function closePinModal(){
+  document.getElementById('pinOverlay').style.display = 'none';
+  _pinBuffer = '';
+}
+
+function cancelPinModal(){
+  closePinModal();
+  if(_pinResolve){ const r=_pinResolve; _pinResolve=null; r(null); }
+}
+
 async function setupPin(){
-  const pin = prompt('Set a PIN for Admin access (4-6 digits):');
+  const pin = await showPinModal('Set Admin PIN', 'Choose a 6-digit PIN');
   if(!pin) return false;
-  const confirmPin = prompt('Confirm PIN:');
+  const confirmPin = await showPinModal('Confirm PIN', 'Re-enter your PIN');
+  if(!confirmPin) return false;
   if(pin !== confirmPin){ alert('PINs do not match.'); return false; }
   localStorage.setItem('cp_admin_pin', await hashPin(pin));
   return true;
@@ -278,7 +366,7 @@ async function setupPin(){
 async function verifyPin(){
   const stored = localStorage.getItem('cp_admin_pin');
   if(!stored) return await setupPin();
-  const pin = prompt('Enter Admin PIN:');
+  const pin = await showPinModal('Enter Admin PIN', 'Unlock the Admin panel');
   if(!pin) return false;
   const hash = await hashPin(pin);
   if(hash === stored) return true;
